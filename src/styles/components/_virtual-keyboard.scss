@@ -1,0 +1,257 @@
+// ── VirtualKeyboard — draggable QWERTY overlay ──
+
+.virtual-keyboard {
+  position: fixed;
+  z-index: 2000;
+  width: 520px;
+  background: rgba(30, 30, 33, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px);
+  user-select: none;
+  animation: keyboard-in 0.18s ease both;
+
+  // ── Light mode override ──
+  [data-theme='light'] & {
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  }
+
+  // ── Drag handle ──
+  &__handle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px 8px;
+    cursor: grab;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+
+    [data-theme='light'] & {
+      border-bottom-color: rgba(0, 0, 0, 0.08);
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  &__handle-label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: #808080;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+
+    [data-theme='light'] & {
+      color: #3a3a3c;
+    }
+  }
+
+  &__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-base);
+    border: none;
+    background: transparent;
+    color: #666;
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+
+    &:hover {
+      background: #3f3f46;
+      color: #e8e8e8;
+    }
+
+    [data-theme='light'] & {
+      color: #3a3a3c;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.08);
+        color: #1c1c1e;
+      }
+    }
+  }
+
+  // ── Key rows ──
+  &__rows {
+    padding: 10px 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+
+    &--bottom {
+      gap: 6px;
+      margin-top: 2px;
+    }
+  }
+
+  // ── Individual key ──
+  &__key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 36px;
+    padding: 0 4px;
+    background: #3a3a3e;
+    border: 1px solid #505055;
+    border-radius: 6px;
+    color: #e8e8e8;
+    font-size: 13px;
+    font-weight: var(--font-weight-medium);
+    font-family: var(--font-family-base);
+    cursor: pointer;
+    transition:
+      background var(--transition-fast),
+      transform 60ms ease,
+      box-shadow 60ms ease;
+    box-shadow: 0 2px 0 #222;
+
+    &:hover {
+      background: #4a4a4e;
+    }
+
+    &:active {
+      transform: translateY(1px);
+      box-shadow: none;
+      background: #555;
+    }
+
+    // ── Light mode keys ──
+    [data-theme='light'] & {
+      background: #ffffff;
+      border: none;
+      color: #1c1c1e;
+      box-shadow: none;
+
+      &:hover {
+        background: #f0f0f0;
+      }
+
+      &:active {
+        background: #d8d8dc;
+      }
+    }
+
+    // Wide keys (⌫)
+    &--wide {
+      min-width: 48px;
+      font-size: 20px;
+      color: #b0b0b0;
+
+      [data-theme='light'] & {
+        color: #3a3a3c;
+        border: none;
+        box-shadow: none;
+
+        &:hover {
+          background: #c0c0c8;
+        }
+
+        &:active {
+          background: #b0b0b8;
+        }
+      }
+    }
+
+    &--shift {
+      min-width: 40px;
+      color: #b0b0b0;
+      font-size: 16px;
+
+      [data-theme='light'] & {
+        color: #3a3a3c;
+        border: none;
+        box-shadow: none;
+
+        &:hover {
+          background: #c0c0c8;
+        }
+
+        &:active {
+          background: #b0b0b8;
+          box-shadow: none;
+        }
+      }
+    }
+
+    &--shift-active {
+      background: #4776e6;
+      border-color: #5588ff;
+      color: #ffffff;
+      box-shadow: 0 2px 0 #1a3a8a;
+    }
+
+    // Space bar
+    &--space {
+      flex: 1;
+      min-width: 0;
+      height: 38px;
+      font-size: var(--font-size-sm);
+      color: #b0b0b0;
+
+      [data-theme='light'] & {
+        color: #1c1c1e;
+      }
+    }
+
+    // Search/enter
+    &--search {
+      min-width: 80px;
+      height: 38px;
+      background: #4776e6;
+      border-color: #5588ff;
+      color: #ffffff;
+      font-weight: var(--font-weight-semibold);
+      font-size: var(--font-size-sm);
+      box-shadow: 0 2px 0 #1a3a8a;
+
+      &:hover {
+        background: #5588ff;
+      }
+
+      &:active {
+        background: #3a66d6;
+        box-shadow: none;
+      }
+
+      [data-theme='light'] & {
+        background: #1c1c1e;
+        border: none;
+        color: #ffffff;
+        box-shadow: none;
+
+        &:hover {
+          background: #3a3a3c;
+        }
+
+        &:active {
+          background: #0a0a0c;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
+
+@keyframes keyboard-in {
+  from {
+    opacity: 0;
+    transform: translateZ(0) scale(0.95) translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateZ(0) scale(1) translateY(0);
+  }
+}

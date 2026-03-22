@@ -1,0 +1,178 @@
+// ============================================
+//  Global Styles Entry Point
+// ============================================
+
+// 1. Design tokens (CSS custom properties)
+@use 'variables';
+
+// 2. Reset
+@use 'reset';
+
+// 3. Layout components
+@use 'layout/header';
+@use 'layout/navigation';
+@use 'layout/home';
+@use 'layout/footer';
+
+// 4. Shared components
+@use 'components/search-bar';
+@use 'components/sticky-search-bar';
+@use 'components/settings-button';
+@use 'components/theme-toggle';
+@use 'components/virtual-keyboard';
+@use 'components/quick-menu';
+@use 'components/ad-banner';
+@use 'components/login-panel';
+@use 'components/live-panel';
+@use 'components/listen-panel';
+@use 'components/ad-card';
+@use 'components/news-panel';
+@use 'components/news-ad-banner';
+@use 'components/contest';
+@use 'components/weather-widget';
+@use 'components/events-panel';
+@use 'components/jobs-panel';
+@use 'components/classifieds-preview';
+@use 'components/sitemap';
+@use 'components/side-panel';
+
+// ── Panel base — 카드 공통 스타일 ──
+.panel {
+  padding: 24px;
+  background: var(--color-surface-primary);
+  border-radius: 20px;
+
+  [data-theme='light'] & {
+    background: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 0px;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+  }
+
+  &__title-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-shrink: 0;
+    text-decoration: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -6px -8px;
+      border-radius: var(--radius-full);
+      background: var(--color-bg-tertiary);
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    &:hover::after { opacity: 1; }
+
+    > * { position: relative; z-index: 1; }
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  &__title-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 0 6px 10px;
+    border-radius: var(--radius-full);
+    font-size: 18px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+
+    svg { color: var(--color-text-tertiary); flex-shrink: 0; }
+  }
+}
+
+// ── Page utilities ──
+
+.page {
+  min-height: calc(100vh - var(--header-height));
+  background: var(--color-bg-primary);
+}
+
+.page__hero {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0;
+
+  // Flex row: spacer + SearchBar + action buttons
+  // Left spacer balances right actions so SearchBar stays centered
+  &__bar {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+
+    // SearchBar section takes available space
+    .search-bar__section {
+      flex: 1;
+      min-width: 0;
+    }
+
+    // Left spacer mirrors actions width for centering
+    &::before {
+      content: '';
+      flex-shrink: 0;
+      width: 96px; // 2 × 48px action buttons
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-shrink: 0;
+    width: 96px; // 2 × 48px — must match ::before width
+    height: 56px; // match search-bar__wrapper height
+  }
+
+  &__action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #c1c1c1;
+    border-radius: var(--radius-md);
+    transition: color var(--transition-fast), background var(--transition-fast);
+
+    &:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    [data-theme='light'] & {
+      color: #333333;
+
+      img { filter: invert(1); }
+
+      &:hover {
+        color: #000000;
+        background: rgba(0, 0, 0, 0.06);
+      }
+    }
+  }
+}

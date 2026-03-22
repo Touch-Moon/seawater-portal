@@ -1,0 +1,37 @@
+// ── StickySearchBar — slide-down clone when .home hits viewport top ──
+
+.sticky-search-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  transform: translateY(-100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+
+  // Fade-out gradient backdrop via ::after
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, #131416, #131416, rgba(28, 30, 33, 0));
+
+    [data-theme='light'] & {
+      background: linear-gradient(180deg, #f2f4f7, #f2f4f7, rgba(242, 244, 247, 0));
+    }
+  }
+
+  // Override search-bar__section for sticky state
+  .search-bar__section {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    background: transparent;
+  }
+
+  &--visible {
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}

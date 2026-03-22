@@ -1,0 +1,356 @@
+// ============================================
+//  QuickMenu — Horizontal pill menu + dropdown panel
+//  Daum-style icon + label quick access bar
+// ============================================
+
+.quick-menu {
+  position: relative;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding-top: 16px;
+
+  @media (min-width: 768px) {
+    padding-top: 20px;
+  }
+
+  @media (min-width: 1280px) {
+    padding-top: 40px;
+  }
+
+  // ── Scroll hint icon — mobile only ──
+  &__scroll-hint {
+    position: absolute;
+    right: 8px;
+    top: 20px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    color: var(--color-text-tertiary);
+    pointer-events: none;
+
+    // Hide on tablet+ — items are centered, no scrolling
+    @media (min-width: 768px) {
+      display: none;
+    }
+  }
+
+  // ── Top bar — horizontally scrollable on mobile ──
+  &__bar {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4px 16px 4px 16px;
+    // Extra right padding so last item can scroll clear of the hint icon + fade zone
+    padding-right: 80px;
+    scrollbar-width: none;
+    cursor: grab;
+    -webkit-overflow-scrolling: touch; // smooth momentum on iOS
+
+    // Fade-out mask — fully transparent before scroll-hint icon (icon: 44px + right 8px = 52px)
+    -webkit-mask-image: linear-gradient(to right,
+        transparent 0,
+        black 24px,
+        black calc(100% - 88px),
+        transparent calc(100% - 52px));
+    mask-image: linear-gradient(to right,
+        transparent 0,
+        black 24px,
+        black calc(100% - 88px),
+        transparent calc(100% - 52px));
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    // Tablet+: centered, no mask, no extra padding
+    @media (min-width: 768px) {
+      justify-content: center;
+      padding-inline: 24px;
+      padding-right: 24px;
+      cursor: auto;
+      -webkit-mask-image: none;
+      mask-image: none;
+
+      &:active {
+        cursor: auto;
+      }
+    }
+
+    // Desktop: no scroll, no mask, no drag cursor, no extra padding
+    @media (min-width: 1280px) {
+      padding-inline: 32px;
+      padding-right: 32px;
+      cursor: auto;
+      -webkit-mask-image: none;
+      mask-image: none;
+
+      &:active {
+        cursor: auto;
+      }
+    }
+  }
+
+  // ── Menu item (shared for bar + panel) ──
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    height: 44px;
+    padding: 10px 12px;
+    background: var(--quick-menu-item-bg);
+    border-radius: 22px;
+    border: none;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    box-shadow: none;
+    transition: box-shadow var(--transition-fast);
+    cursor: pointer;
+
+    &:hover,
+    &:visited {
+      color: var(--color-text-primary);
+    }
+
+    &:hover {
+      box-shadow: var(--quick-menu-shadow-hover);
+    }
+
+    // Toggle button (... / X)
+    &--toggle {
+      padding: 10px;
+      aspect-ratio: 1;
+      justify-content: center;
+      color: var(--color-text-primary);
+    }
+
+    &--active {
+      background: var(--color-surface-tertiary);
+    }
+
+    // Extra items: visible on mobile, hidden on tablet+
+    &--extra {
+      @media (min-width: 768px) {
+        display: none;
+      }
+    }
+
+    // More button: hidden on mobile, visible on tablet+
+    &--more-btn {
+      display: none;
+
+      @media (min-width: 768px) {
+        display: flex;
+      }
+    }
+  }
+
+  // ── Toggle icon (no gradient bg) ──
+  &__toggle-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+  }
+
+  // ── Icon box ──
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 10px;
+    color: #ffffff;
+    flex-shrink: 0;
+  }
+
+  // ── Label ──
+  &__label {
+    font-size: 15px;
+    font-weight: var(--font-weight-semibold);
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  // ── Full-width dropdown panel ──
+  &__panel {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 100%;
+    margin-top: 12px;
+    width: 720px;
+    max-width: calc(100% - 32px);
+    padding: 20px;
+    background: var(--color-surface-secondary);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--quick-menu-popup-shadow);
+    z-index: 100;
+
+    @media (min-width: 768px) {
+      padding: 24px;
+    }
+  }
+
+  // ── Grid inside panel ──
+  &__panel-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 8px;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  // ── Panel item (inside grid) ──
+  &__panel-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--color-text-primary);
+    transition: background var(--transition-fast);
+    cursor: pointer;
+
+    &:hover,
+    &:visited {
+      color: var(--color-text-primary);
+    }
+
+    &:hover {
+      background: var(--color-surface-tertiary);
+    }
+  }
+
+  // ── Listen panel modifier ──
+  &__panel--listen {
+    padding: 20px;
+
+    @media (min-width: 768px) {
+      padding: 24px;
+    }
+  }
+
+  // ── Listen channel grid ──
+  &__listen-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  // ── Listen card ──
+  &__listen-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: transform var(--transition-fast);
+    cursor: pointer;
+
+    &:hover,
+    &:visited {
+      color: var(--color-text-primary);
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+
+      .quick-menu__listen-thumb {
+        filter: brightness(1.1);
+      }
+    }
+  }
+
+  // ── Thumbnail area ──
+  &__listen-thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: #ffffff;
+    transition: filter var(--transition-fast);
+  }
+
+  // ── Logo image inside thumb ──
+  &__listen-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 12px 20px;
+  }
+
+  // ── Play button overlay ──
+  &__listen-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+
+    .quick-menu__listen-card:hover & {
+      opacity: 1;
+    }
+  }
+
+  // ── Play badge ──
+  &__listen-live {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: #ff4e33;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.04em;
+    border-radius: var(--radius-full);
+    line-height: 1;
+  }
+
+  // ── Channel info ──
+  &__listen-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 0 2px 4px;
+  }
+
+  &__listen-title {
+    font-size: 13px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__listen-subtitle {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    line-height: 1.2;
+  }
+}

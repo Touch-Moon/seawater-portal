@@ -1,0 +1,93 @@
+/* Header — Daum-style two-tier header */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border-light);
+  box-shadow: var(--shadow-xs);
+}
+
+/* ── Top bar (logo + utility) ── */
+.topBar {
+  width: 100%;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.topInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 16px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Logo ── */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logoIcon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.logoText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.logoMain {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  letter-spacing: -0.3px;
+}
+
+.logoSub {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary-500);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* ── Utility (right side) ── */
+.utility {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Responsive ── */
+@media (min-width: 768px) {
+  .topInner {
+    height: 64px;
+    padding: 0 24px;
+  }
+
+  .logoIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .logoMain {
+    font-size: var(--font-size-lg);
+  }
+}
+
+@media (min-width: 1280px) {
+  .topInner {
+    padding: 0 32px;
+  }
+}

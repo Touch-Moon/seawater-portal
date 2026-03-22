@@ -1,0 +1,112 @@
+// ============================================
+//  LivePanel — left column: 3 live channel cards
+//  Card design mirrors quick-menu__panel--listen
+// ============================================
+
+.live-panel {
+  padding: 24px;
+  background: var(--color-surface-primary);
+  border-radius: 20px;
+
+  [data-theme='light'] & {
+    background: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 0px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+
+  // ── Card (mirrors quick-menu__listen-card) ──
+  &__card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: transform var(--transition-fast);
+    cursor: pointer;
+
+    &:hover,
+    &:visited {
+      color: var(--color-text-primary);
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+
+      .live-panel__thumb {
+        filter: brightness(1.1);
+      }
+
+      .live-panel__play {
+        opacity: 1;
+      }
+    }
+  }
+
+  // ── Thumbnail (mirrors __listen-thumb) ──
+  &__thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: #ffffff; // dark mode default
+    transition: filter var(--transition-fast);
+
+    [data-theme='light'] & {
+      background: #f2f4f7;
+    }
+  }
+
+  // ── Logo image (mirrors __listen-img) ──
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 12px 20px;
+  }
+
+  // ── Play overlay — hidden until hover, red triangle ──
+  &__play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+  }
+
+  // ── LIVE/Play badge (mirrors __listen-live) ──
+  &__live {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: #ff4e33;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.04em;
+    border-radius: var(--radius-full);
+    line-height: 1;
+  }
+
+  // ── Info (mirrors __listen-info) ──
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 0 2px 4px;
+  }
+
+}

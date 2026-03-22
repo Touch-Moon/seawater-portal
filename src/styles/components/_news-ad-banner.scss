@@ -1,0 +1,55 @@
+// ============================================
+//  NewsAdBanner — Google Leaderboard 728×90
+//  Main col: 768px − padding 24px×2 = 720px (fluid)
+// ============================================
+
+.news-ad-banner {
+  padding: 24px;
+  background: var(--color-surface-primary);
+  border-radius: 20px;
+
+  [data-theme='light'] & {
+    background: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 0px;
+  }
+
+  // ── Google Ad slot — Leaderboard (728×90)
+  &__slot {
+    width: 100%;
+    height: 90px;
+    border-radius: var(--radius-md);
+    border: 1.5px dashed rgba(255, 255, 255, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    [data-theme='light'] & {
+      border-color: rgba(0, 0, 0, 0.12);
+    }
+  }
+
+  &__google-icon {
+    width: 18px;
+    height: 18px;
+    filter: grayscale(1);
+    opacity: 0.22;
+    flex-shrink: 0;
+    margin-bottom: 2px;
+  }
+
+  &__label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  &__size {
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+    opacity: 0.45;
+  }
+}

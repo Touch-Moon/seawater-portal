@@ -1,0 +1,67 @@
+// ============================================
+//  Home page 2-column grid layout
+//
+//  Desktop (≥ 1168px):
+//    left  .home__main    → 768px
+//    gap                  → 16px
+//    right .home__sidebar → 384px
+//    total                = 1168px (== --max-width)
+//
+//  Mobile / Tablet (< 1168px): single column stack
+// ============================================
+
+$home-sticky-top: 40px;
+
+.home {
+  background: var(--color-bg-primary);
+  padding: 8px 0 40px;
+
+  &__inner {
+    max-width: var(--max-width); // 1168px
+    margin: 0 auto;
+    padding: 0 16px;
+
+    @media (min-width: 768px) {
+      padding: 0 24px;
+    }
+
+    @media (min-width: 1168px) {
+      padding: 0;
+      display: grid;
+      grid-template-columns: 768px 384px;
+      grid-template-areas: 'main sidebar';
+      gap: 16px;
+    }
+  }
+
+  // ── Left column — main content ──
+  &__main {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+    position: sticky;
+    top: $home-sticky-top; // 16px
+    bottom: $home-sticky-top; // 16px
+    align-self: flex-start;
+  }
+
+  // ── Right column — sidebar ──
+  &__sidebar {
+    grid-area: sidebar;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+    position: sticky;
+    top: $home-sticky-top; // 16px
+    bottom: $home-sticky-top; // 16px
+    align-self: flex-start;
+
+    // Mobile: sidebar appears below main
+    @media (max-width: 1167px) {
+      margin-top: 16px;
+    }
+  }
+}

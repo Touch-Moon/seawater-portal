@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SearchBar Preview</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #13131a;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Section ─────────────────────────── */
+  .section {
+    width: 100%;
+    padding-top: 48px;
+    display: flex;
+    justify-content: center;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* ── Gradient border wrapper ─────────── */
+  .wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 56px;
+    border-radius: 9999px;
+    padding: 2px;
+    background: linear-gradient(
+      90deg,
+      #4776e6 0%,
+      #8e54e9 33%,
+      #e91e8c 66%,
+      #f7941d 100%
+    );
+    transition: padding 150ms ease;
+  }
+
+  .wrapper:focus-within {
+    padding: 2.5px;
+  }
+
+  /* ── Inner ───────────────────────────── */
+  .inner {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 9999px;
+    background: #1e1e22;
+    padding: 0 14px;
+    gap: 6px;
+  }
+
+  /* ── Logo button ─────────────────────── */
+  .logo-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 2px;
+  }
+
+  .logo-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* ── Input ───────────────────────────── */
+  .input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #e8e8e8;
+    font-size: 16px;
+    font-family: inherit;
+    caret-color: #fff;
+    min-width: 0;
+  }
+
+  .input::placeholder { color: #666; font-size: 14px; }
+  .input::-webkit-search-cancel-button { display: none; }
+
+  /* ── Icon buttons ────────────────────── */
+  .icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color 150ms ease;
+  }
+
+  .icon-btn:hover { color: #aaa; }
+
+  .divider {
+    width: 1px;
+    height: 18px;
+    background: #333;
+    flex-shrink: 0;
+  }
+
+  /* ── Light mode toggle (demo) ────────── */
+  .toggle {
+    margin-top: 32px;
+    color: #666;
+    font-size: 13px;
+    display: flex;
+    gap: 12px;
+  }
+  .toggle button {
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: #aaa;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .toggle button:hover { background: #333; }
+
+  /* ── Light mode ─────────────────────── */
+  body.light { background: #f0f0f0; }
+  body.light .inner { background: #ffffff; }
+  body.light .input { color: #1a1a1a; }
+  body.light .input::placeholder { color: #aaa; }
+  body.light .icon-btn { color: #999; }
+  body.light .icon-btn:hover { color: #333; }
+  body.light .divider { background: #ddd; }
+</style>
+</head>
+<body>
+
+<div class="section">
+  <form class="wrapper" onsubmit="return false">
+    <div class="inner">
+
+      <!-- Logo S (SteinbachOnline) -->
+      <button type="button" class="logo-btn" aria-label="Logo">
+        <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%"   stop-color="#4776E6"/>
+              <stop offset="35%"  stop-color="#8E54E9"/>
+              <stop offset="70%"  stop-color="#E91E8C"/>
+              <stop offset="100%" stop-color="#F7941D"/>
+            </linearGradient>
+          </defs>
+          <text x="3" y="26" font-size="27" font-weight="800"
+                font-family="-apple-system,sans-serif" fill="url(#lg)">S</text>
+        </svg>
+      </button>
+
+      <!-- Input -->
+      <input class="input" type="search"
+             placeholder="Search news, events, weather..." />
+
+      <!-- Keyboard icon -->
+      <button type="button" class="icon-btn" aria-label="Keyboard">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="6" width="20" height="12" rx="2"/>
+          <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/>
+        </svg>
+      </button>
+
+      <div class="divider"></div>
+
+      <!-- Search icon -->
+      <button type="submit" class="icon-btn" aria-label="Search">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+      </button>
+
+    </div>
+  </form>
+</div>
+
+<!-- 다크/라이트 전환 테스트 -->
+<div class="toggle">
+  <button onclick="document.body.classList.remove('light')">🌙 Dark</button>
+  <button onclick="document.body.classList.add('light')">☀️ Light</button>
+</div>
+
+</body>
+</html>

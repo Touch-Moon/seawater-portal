@@ -1,0 +1,259 @@
+// ── SearchBar — Daum-style gradient border ──
+
+.search-bar {
+  &__section {
+    width: 100%;
+    padding: 48px 0 0 0;
+    display: flex;
+    justify-content: flex-start;
+    background: var(--color-bg-primary);
+    margin: 0 auto;
+
+    @media (min-width: 768px) {
+      padding: 48px 0 0 0;
+      justify-content: center;
+    }
+
+    @media (min-width: 1280px) {
+      padding: 48px 0 0 0;
+      max-width: 600px;
+    }
+  }
+
+  // gradient border: wrapper bg = gradient, padding = border thickness
+  &__wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    height: 56px;
+    border-radius: var(--radius-full);
+    padding: 1px;
+    background: linear-gradient(90deg,
+        #4aabf7 0%,
+        #8e54e9 33%,
+        #e91e8c 66%,
+        #ffc114 100%);
+    overflow: hidden;
+
+    @media (min-width: 768px) {
+      max-width: 600px;
+    }
+
+    // Solid color overlay — slides from right on focus
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: #ffc114;
+      transform: translateX(100%);
+      transition: transform 0.4s ease;
+      z-index: 0;
+    }
+
+    &--focused::before {
+      transform: translateX(0);
+    }
+  }
+
+  // inner fills wrapper, clips to pill shape
+  &__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-full);
+    background: #2c2e33;
+    padding: 0 8px 0 24px;
+    gap: 6px;
+
+    [data-theme='light'] & {
+      background: #ffffff;
+    }
+  }
+
+  &__logo-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  // Logo wrap: stacking container for two <img> layers
+  &__logo-wrap {
+    position: relative;
+    display: flex;
+    width: 126px;
+    height: 24px;
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: width 0.4s ease;
+  }
+
+  // Focused: shrink logo to icon-only (≈24px mark)
+  &__wrapper--focused &__logo-wrap {
+    width: 24px;
+  }
+
+  // Brand logo: bottom layer, always visible — fixed size, not affected by wrap shrink
+  &__logo-brand {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 126px;
+    min-width: 126px;
+    height: 24px;
+  }
+
+  // Colorful logo: top layer, fades out on focus to reveal brand color
+  &__logo-colorful {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 126px;
+    min-width: 126px;
+    height: 24px;
+    opacity: 1;
+    transition: opacity 0.4s ease;
+
+    &--out {
+      opacity: 0;
+    }
+  }
+
+  &__input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 700;
+    font-family: var(--font-family-base);
+    caret-color: #ffffff;
+    min-width: 0;
+    appearance: none;
+    -webkit-appearance: none;
+
+    &::placeholder {
+      color: #555;
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-normal);
+    }
+
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
+
+    // Remove browser/reset focus styles
+    &:focus {
+      outline: none;
+      box-shadow: none;
+      border-color: transparent;
+    }
+
+    [data-theme='light'] & {
+      color: #000000;
+      caret-color: #000000;
+
+      &::placeholder {
+        color: #aaa;
+      }
+    }
+  }
+
+  // Cancel button — appears when input has text
+  &__cancel-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #c1c1c1;
+    padding: 0;
+    transition: color var(--transition-fast);
+
+    &:hover {
+      color: #ffffff;
+    }
+
+    [data-theme='light'] & {
+      color: #000000;
+
+      &:hover {
+        color: #333333;
+      }
+    }
+  }
+
+  // Keyboard + Search with zero gap
+  &__btn-group {
+    display: flex;
+    flex-shrink: 0;
+    gap: 0;
+
+    // 키보드 버튼 오른쪽 패딩 제거
+    .search-bar__icon-btn:first-child {
+      padding-right: 0;
+    }
+  }
+
+  &__icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #c1c1c1;
+    // 52x52 via padding: (52 - 28) / 2 = 12px
+    padding: 12px;
+    border-radius: var(--radius-base);
+    transition: color var(--transition-fast);
+
+    &:hover {
+      color: #ffffff;
+    }
+
+    &--active {
+      color: #4aabf7;
+
+      &:hover {
+        color: #7bc8ff;
+      }
+    }
+
+    [data-theme='light'] & {
+      color: #000000;
+
+      &:hover {
+        color: #333333;
+      }
+
+      &.search-bar__icon-btn--active {
+        color: #0052cc;
+      }
+    }
+  }
+
+  &__divider {
+    width: 1px;
+    height: 18px;
+    background: #333;
+    flex-shrink: 0;
+
+    [data-theme='light'] & {
+      background: #e0e0e0;
+    }
+  }
+}

@@ -1,0 +1,264 @@
+// ============================================
+//  DESIGN TOKENS — Light & Dark Mode
+//  Based on Daum/Korean Portal Design Standards
+// ============================================
+
+// SCSS reference vars (for use in SCSS math/functions)
+$max-width: 1168px;
+$breakpoint-sm: 480px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1168px;
+
+// Search bar gradient
+$gradient-search: linear-gradient(90deg,
+  #4aabf7 0%,
+  #8e54e9 33%,
+  #e91e8c 66%,
+  #ffb300 100%
+);
+
+// ── CSS Custom Properties (runtime theming) ──
+
+:root {
+  // Backgrounds
+  --color-bg-primary:    #f2f4f7;
+  --color-bg-secondary:  #f5f5f5;
+  --color-bg-tertiary:   #eeeeee;
+  --color-bg-overlay:    rgba(0, 0, 0, 0.5);
+
+  // Text
+  --color-text-primary:   #1a1a1a;
+  --color-text-secondary: #666666;
+  --color-text-tertiary:  #999999;
+  --color-text-disabled:  #cccccc;
+  --color-text-inverse:   #ffffff;
+
+  // Surface / Card
+  --color-surface-primary:   #ffffff;
+  --color-surface-secondary: #f9f9f9;
+  --color-surface-tertiary:  #f0f0f0;
+
+  // Primary Brand (Daum Blue)
+  --color-primary-50:  #e8f4ff;
+  --color-primary-100: #c9e4ff;
+  --color-primary-200: #99ccff;
+  --color-primary-300: #4d9cff;
+  --color-primary-400: #1a73e8;
+  --color-primary-500: #0052cc;
+  --color-primary-600: #003d99;
+  --color-primary-700: #002e73;
+
+  // Accent (Warm Orange)
+  --color-accent-50:  #fef3e8;
+  --color-accent-100: #fde3c9;
+  --color-accent-200: #fac699;
+  --color-accent-300: #f7a94d;
+  --color-accent-400: #f57c1a;
+  --color-accent-500: #ff6600;
+  --color-accent-600: #cc5200;
+  --color-accent-700: #993d00;
+
+  // Status
+  --color-success-50:  #f0f9f0;
+  --color-success-500: #34a853;
+  --color-success-700: #0d652d;
+
+  --color-error-50:  #fdf2f2;
+  --color-error-500: #d33b27;
+  --color-error-700: #8a3623;
+
+  --color-warning-50:  #fff9e6;
+  --color-warning-500: #fbbc04;
+  --color-warning-700: #c17900;
+
+  --color-info-50:  #e8f4ff;
+  --color-info-500: #1a73e8;
+  --color-info-700: #002e73;
+
+  // Borders
+  --color-border-light:  #e5e5e5;
+  --color-border-medium: #d0d0d0;
+  --color-border-dark:   #999999;
+  --color-border-focus:  #0052cc;
+
+  // Divider
+  --color-divider: #eeeeee;
+
+  // Typography
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', 'Nanum Gothic', sans-serif;
+  --font-family-mono: 'Courier New', 'Noto Sans Mono', monospace;
+
+  --font-size-xs:      0.6875rem; // 11px
+  --font-size-sm:      0.75rem;   // 12px
+  --font-size-base:    0.875rem;  // 14px
+  --font-size-md:      1rem;      // 16px
+  --font-size-lg:      1.125rem;  // 18px
+  --font-size-caption: 0.6875rem; // 11px
+  --font-size-h4:      1.125rem;  // 18px
+  --font-size-h3:      1.25rem;   // 20px
+  --font-size-h2:      1.5rem;    // 24px
+  --font-size-h1:      2rem;      // 32px
+
+  --font-weight-normal:   400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+
+  --line-height-tight:   1.2;
+  --line-height-normal:  1.4;
+  --line-height-relaxed: 1.6;
+  --line-height-loose:   1.8;
+
+  // Spacing
+  --space-2:  0.125rem;
+  --space-4:  0.25rem;
+  --space-6:  0.375rem;
+  --space-8:  0.5rem;
+  --space-12: 0.75rem;
+  --space-16: 1rem;
+  --space-20: 1.25rem;
+  --space-24: 1.5rem;
+  --space-32: 2rem;
+  --space-40: 2.5rem;
+  --space-48: 3rem;
+  --space-64: 4rem;
+  --space-80: 5rem;
+
+  // Border Radius — Daum portal reference values
+  --radius-sm:   2px;    // Daum: 2px
+  --radius-base: 6px;    // Daum: 6px
+  --radius-md:   8px;    // Daum: 8px
+  --radius-lg:   10px;   // Daum: 10px
+  --radius-xl:   12px;   // Daum: 12px
+  --radius-2xl:  28px;   // Daum: 28px (searchbar)
+  --radius-full: 9999px; // pill / full circle
+
+  // QuickMenu
+  --quick-menu-item-bg:      #ffffff;
+  --quick-menu-shadow-hover: 0 0 8px 0 rgba(0, 0, 0, 0.12);
+  --quick-menu-popup-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.16);
+
+  // Shadows
+  --shadow-xs:    0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm:    0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-base:  0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-md:    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg:    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-focus: 0 0 0 3px rgba(0, 82, 204, 0.3);
+
+  // Transitions
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Site-specific primary (override per site via SiteConfig / env)
+  // Default: Steinbach Online yellow (#fee200)
+  --color-site-primary:       #fee200;
+  --color-site-primary-hover: #f5da00;
+  --color-site-primary-text:  #000000; // contrast text on site primary
+
+  // Layout
+  --max-width:      1168px;
+  --header-height:  56px;
+  --sidebar-width:  300px;
+}
+
+// Responsive typography
+@media (min-width: $breakpoint-md) {
+  :root {
+    --font-size-h1: 2.25rem;
+    --font-size-h2: 1.75rem;
+    --font-size-h3: 1.375rem;
+    --font-size-h4: 1.25rem;
+    --header-height: 60px;
+  }
+}
+
+@media (min-width: $breakpoint-lg) {
+  :root {
+    --font-size-h1: 2.5rem;
+    --font-size-h2: 2rem;
+    --font-size-h3: 1.5rem;
+    --font-size-h4: 1.25rem;
+  }
+}
+
+// ── Dark Mode tokens ──
+[data-theme='dark'] {
+  --color-bg-primary:    #131416;
+  --color-bg-secondary:  #27272a;
+  --color-bg-tertiary:   #3f3f46;
+  --color-bg-overlay:    rgba(0, 0, 0, 0.8);
+
+  --color-text-primary:   #e8e8e8;
+  --color-text-secondary: #b0b0b0;
+  --color-text-tertiary:  #808080;
+  --color-text-disabled:  #555555;
+  --color-text-inverse:   #1a1a1a;
+
+  --color-surface-primary:   #1e1e21;
+  --color-surface-secondary: #27272a;
+  --color-surface-tertiary:  #3f3f46;
+
+  --color-primary-50:  #1a3a6b;
+  --color-primary-100: #2450a0;
+  --color-primary-200: #3366d6;
+  --color-primary-300: #5588ff;
+  --color-primary-400: #7ba8ff;
+  --color-primary-500: #a0c4ff;
+  --color-primary-600: #c5deff;
+  --color-primary-700: #e8f0ff;
+
+  --color-accent-50:  #663300;
+  --color-accent-100: #994d00;
+  --color-accent-200: #cc6600;
+  --color-accent-300: #ff8833;
+  --color-accent-400: #ff9955;
+  --color-accent-500: #ffaa77;
+  --color-accent-600: #ffbb99;
+  --color-accent-700: #ffd6bb;
+
+  --color-success-50:  #0a3d1f;
+  --color-success-500: #57d084;
+  --color-success-700: #a8f5c9;
+
+  --color-error-50:  #5a1f1a;
+  --color-error-500: #ff7f6b;
+  --color-error-700: #ffb3a8;
+
+  --color-warning-50:  #664d00;
+  --color-warning-500: #ffc94d;
+  --color-warning-700: #ffe5b3;
+
+  --color-info-50:  #1a3a6b;
+  --color-info-500: #7ba8ff;
+  --color-info-700: #e8f0ff;
+
+  --color-border-light:  #3d3d3d;
+  --color-border-medium: #4d4d4d;
+  --color-border-dark:   #6d6d6d;
+  --color-border-focus:  #7ba8ff;
+
+  --color-divider: #2d2d2d;
+
+  // QuickMenu
+  --quick-menu-item-bg:      var(--color-surface-secondary);
+  --quick-menu-shadow-hover: none;
+  --quick-menu-popup-shadow: none;
+
+  --shadow-xs:    0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-sm:    0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-base:  0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-md:    0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  --shadow-lg:    0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  --shadow-focus: 0 0 0 3px rgba(123, 168, 255, 0.3);
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+    --transition-slow: 0ms;
+  }
+}

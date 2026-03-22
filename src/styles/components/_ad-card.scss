@@ -1,0 +1,59 @@
+// ============================================
+//  AdCard — Google Display Ad 336×280
+//  Sidebar 384px - padding 24px×2 = 336px (exact fit)
+// ============================================
+
+.ad-card {
+  padding: 24px;
+  background: var(--color-surface-primary);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  [data-theme='light'] & {
+    background: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 0px;
+  }
+
+  // ── Google Ad slot — 336×280 ──
+  &__slot {
+    width: 336px;
+    height: 280px;
+    border-radius: var(--radius-md);
+    border: 1.5px dashed rgba(255, 255, 255, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-shrink: 0;
+
+    [data-theme='light'] & {
+      border-color: rgba(0, 0, 0, 0.12);
+    }
+  }
+
+  &__google-icon {
+    width: 28px;
+    height: 28px;
+    filter: grayscale(1);
+    opacity: 0.22;
+    flex-shrink: 0;
+    margin-bottom: 4px;
+  }
+
+  &__label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  &__size {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    opacity: 0.45;
+  }
+}

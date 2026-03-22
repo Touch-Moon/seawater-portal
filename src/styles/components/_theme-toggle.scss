@@ -1,0 +1,31 @@
+// ── ThemeToggle ──
+
+.theme-toggle {
+  &__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-base);
+    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition:
+      background var(--transition-fast),
+      color var(--transition-fast);
+    flex-shrink: 0;
+
+    &:hover {
+      background: var(--color-bg-tertiary);
+      color: var(--color-text-primary);
+    }
+  }
+
+  &__placeholder {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+}

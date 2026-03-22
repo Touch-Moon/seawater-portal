@@ -1,0 +1,99 @@
+/* SettingsButton — fixed bottom-right */
+
+.btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #2a2a2e;
+  color: #a0a0a8;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.btn:hover {
+  background: #38383e;
+  color: #e0e0e8;
+  transform: scale(1.08);
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+/* 클릭 시 아이콘 45° 회전 */
+.iconSpin {
+  transform: rotate(45deg);
+  transition: transform var(--transition-base);
+}
+
+/* 설정 패널 (간단한 슬라이드) */
+.panel {
+  position: fixed;
+  bottom: 84px;
+  right: 24px;
+  z-index: 999;
+
+  background: #2a2a2e;
+  border: 1px solid #3a3a40;
+  border-radius: 12px;
+  padding: 16px 20px;
+  min-width: 200px;
+
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  animation: slideUp var(--transition-base) ease both;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.panelTitle {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: #e0e0e8;
+  margin-bottom: 6px;
+}
+
+.panelHint {
+  font-size: var(--font-size-sm);
+  color: #666;
+}
+
+/* ── Light mode ── */
+[data-theme='light'] .btn {
+  background: #e8e8ec;
+  color: #666;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme='light'] .btn:hover {
+  background: #d8d8de;
+  color: #333;
+}
+
+[data-theme='light'] .panel {
+  background: #ffffff;
+  border-color: #e0e0e8;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme='light'] .panelTitle {
+  color: #1a1a1a;
+}
