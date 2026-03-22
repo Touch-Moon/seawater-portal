@@ -11,7 +11,7 @@
   height: 130px;
   padding: 20px;
   background: var(--color-surface-primary);
-  border-radius: 20px;
+  border-radius: var(--radius-xl);
   border: none;
 
   [data-theme='light'] & {
@@ -19,7 +19,7 @@
     box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 0px;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 672px) {
     gap: 10px;
   }
 
@@ -41,10 +41,11 @@
 
     &:hover {
       background: var(--color-site-primary-hover);
+      color: var(--color-site-primary-text);
       opacity: 0.92;
     }
 
-    @media (min-width: 768px) {
+    @media (min-width: 672px) {
       font-size: var(--font-size-base);
       padding: 11px 20px;
     }

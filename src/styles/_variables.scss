@@ -5,9 +5,9 @@
 
 // SCSS reference vars (for use in SCSS math/functions)
 $max-width: 1168px;
-$breakpoint-sm: 480px;
-$breakpoint-md: 768px;
-$breakpoint-lg: 1168px;
+$breakpoint-md:    672px;   // 소형 태블릿 시작
+$breakpoint-md-lg: 981px;   // 대형 태블릿 시작
+$breakpoint-lg:    1200px;  // 데스크탑 시작
 
 // Search bar gradient
 $gradient-search: linear-gradient(90deg,

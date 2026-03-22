@@ -7,7 +7,7 @@
   position: relative; // dropdown anchor
   padding: 24px;
   background: var(--color-surface-primary);
-  border-radius: 20px;
+  border-radius: var(--radius-xl);
   min-height: 200px;
 
   [data-theme='light'] & {
@@ -104,6 +104,10 @@
     display: flex;
     gap: 20px;
     padding-top: 16px;
+
+    @media (max-width: 1199px) {
+      flex-direction: column;
+    }
   }
 
   // Left: 2×2 image grid — 167px × 2 col, gap 16px
@@ -114,12 +118,22 @@
     gap: 16px;
     flex: 0 0 auto; // never shrink — fixed width
 
+    @media (max-width: 1199px) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      flex: none;
+      width: 100%;
+    }
+
     // Community variant — 4-col full-width grid (2 rows × 4 cols = 8 items)
     &--community {
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: auto auto;
       flex: 1 1 auto;
       width: 100%;
+
+      @media (max-width: 1199px) {
+        grid-template-columns: repeat(4, 1fr);
+      }
     }
   }
 
@@ -345,6 +359,10 @@
     .news-panel__list-thumb-link {
       padding: 0;
     }
+
+    @media (max-width: 1199px) {
+      grid-template-columns: 1fr;
+    }
   }
 
   // ── Sports variant ────────────────────────
@@ -352,6 +370,13 @@
     display: flex;
     gap: 20px;
     padding-top: 16px;
+
+    // Tablet: 이미지 왼쪽, 텍스트 오른쪽으로 순서 반전
+    @media (max-width: 1199px) {
+      .news-panel__list-thumb-link {
+        flex-direction: row-reverse;
+      }
+    }
   }
 
   // Left column wrapper: featured (350×170) + text list
@@ -360,6 +385,15 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
+
+    @media (max-width: 1199px) {
+      flex: 1;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 285px minmax(0, 1fr); // 이미지 고정 285px, 텍스트 나머지 채움
+      gap: 16px;
+      align-items: start;
+    }
   }
 
   // Featured image card — 350×170
@@ -374,6 +408,13 @@
     display: block;
     background: var(--color-bg-tertiary);
     margin-bottom: 16px;
+
+    @media (max-width: 1199px) {
+      width: 285px;
+      height: 160px;
+      aspect-ratio: unset;
+      margin-bottom: 0;
+    }
 
     &:hover .news-panel__featured-title {
       opacity: 0.8;

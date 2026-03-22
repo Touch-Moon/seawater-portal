@@ -9,12 +9,12 @@
     background: var(--color-bg-primary);
     margin: 0 auto;
 
-    @media (min-width: 768px) {
+    @media (min-width: 672px) {
       padding: 48px 0 0 0;
       justify-content: center;
     }
 
-    @media (min-width: 1280px) {
+    @media (min-width: 1200px) {
       padding: 48px 0 0 0;
       max-width: 600px;
     }
@@ -35,7 +35,7 @@
         #ffc114 100%);
     overflow: hidden;
 
-    @media (min-width: 768px) {
+    @media (min-width: 672px) {
       max-width: 600px;
     }
 

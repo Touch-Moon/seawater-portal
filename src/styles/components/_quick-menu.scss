@@ -9,11 +9,11 @@
   margin: 0 auto;
   padding-top: 16px;
 
-  @media (min-width: 768px) {
+  @media (min-width: 672px) {
     padding-top: 20px;
   }
 
-  @media (min-width: 1280px) {
+  @media (min-width: 1200px) {
     padding-top: 40px;
   }
 
@@ -32,7 +32,7 @@
     pointer-events: none;
 
     // Hide on tablet+ — items are centered, no scrolling
-    @media (min-width: 768px) {
+    @media (min-width: 672px) {
       display: none;
     }
   }
@@ -71,7 +71,7 @@
     }
 
     // Tablet+: centered, no mask, no extra padding
-    @media (min-width: 768px) {
+    @media (min-width: 672px) {
       justify-content: center;
       padding-inline: 24px;
       padding-right: 24px;
@@ -85,7 +85,7 @@
     }
 
     // Desktop: no scroll, no mask, no drag cursor, no extra padding
-    @media (min-width: 1280px) {
+    @media (min-width: 1200px) {
       padding-inline: 32px;
       padding-right: 32px;
       cursor: auto;
@@ -139,7 +139,7 @@
 
     // Extra items: visible on mobile, hidden on tablet+
     &--extra {
-      @media (min-width: 768px) {
+      @media (min-width: 672px) {
         display: none;
       }
     }
@@ -148,7 +148,7 @@
     &--more-btn {
       display: none;
 
-      @media (min-width: 768px) {
+      @media (min-width: 672px) {
         display: flex;
       }
     }
@@ -197,7 +197,7 @@
     box-shadow: var(--quick-menu-popup-shadow);
     z-index: 100;
 
-    @media (min-width: 768px) {
+    @media (min-width: 672px) {
       padding: 24px;
     }
   }
@@ -208,7 +208,7 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 0 8px;
 
-    @media (min-width: 768px) {
+    @media (min-width: 672px) {
       grid-template-columns: repeat(4, 1fr);
     }
   }
@@ -239,7 +239,7 @@
   &__panel--listen {
     padding: 20px;
 
-    @media (min-width: 768px) {
+    @media (min-width: 672px) {
       padding: 24px;
     }
   }

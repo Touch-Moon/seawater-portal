@@ -98,6 +98,10 @@
     grid-template-columns: 1fr 1fr;
     gap: 20px;
     padding-top: 16px;
+
+    @media (max-width: 1199px) {
+      grid-template-columns: 1fr;
+    }
   }
 
   // ── Horizontal card (image left + info right) ──

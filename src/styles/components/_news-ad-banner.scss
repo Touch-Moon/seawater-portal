@@ -6,7 +6,7 @@
 .news-ad-banner {
   padding: 24px;
   background: var(--color-surface-primary);
-  border-radius: 20px;
+  border-radius: var(--radius-xl);
 
   [data-theme='light'] & {
     background: #ffffff;
