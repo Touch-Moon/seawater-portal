@@ -122,17 +122,38 @@ This project was audited and remediated for WCAG 2.1 AA compliance across three 
 
 ## Multi-Site Architecture
 
-A single deployment serves all 10 community sites. Each site is automatically detected by its domain and loads its own configuration from Supabase:
+A single Vercel deployment serves all 10 community sites. The architecture separates **what changes** (brand, content sources) from **what stays the same** (layout, components, features) — so adding a new site requires zero code changes.
+
+### How It Works
 
 ```
-seawater-portal.vercel.app          ← Default (Steinbach)
-├── steinbachonline.com             ← Custom domain
-├── cochranenow.com                 ← Custom domain
-├── highriveronline.com             ← Custom domain
-└── ...7 more
+Request: cochranenow.com/news
+         │
+         ▼
+┌─────────────────────┐
+│   Next.js Proxy     │  ← Reads hostname from request headers
+│   (proxy.ts)        │  ← Maps "cochranenow.com" → site_key: "cochrane"
+└────────┬────────────┘
+         ▼
+┌─────────────────────┐
+│   Supabase          │  ← SELECT * FROM site_configs WHERE site_key = 'cochrane'
+│   site_configs      │  ← Returns: brand color, logo, RSS URL, weather location, radio URL
+└────────┬────────────┘
+         ▼
+┌─────────────────────┐
+│   Shared Codebase   │  ← Same components, same layout, same features
+│   (100% reused)     │  ← Only data sources and CSS variables differ
+└─────────────────────┘
 ```
 
-**What changes per site:**
+1. **Domain Detection** — The proxy middleware reads the incoming hostname and maps it to a `site_key` (e.g., `cochranenow.com` → `cochrane`). Unknown domains fall back to the default site (Steinbach).
+
+2. **Config Loading** — A `site_configs` table in Supabase stores per-site settings. The app loads the matching row at request time and uses it to configure brand colors (injected as CSS custom properties), RSS feed URLs, weather location, and radio stream endpoints.
+
+3. **Data Isolation** — All content tables (`articles`, `events`, `businesses`, `classifieds`) include a `site_key` column. Queries automatically filter by the active site, so each community sees only its own content from the shared database.
+
+### What Changes Per Site
+
 | Config | Example |
 |--------|---------|
 | Brand colors | `#fee200` (Steinbach) / `#e63946` (Cochrane) |
@@ -141,7 +162,9 @@ seawater-portal.vercel.app          ← Default (Steinbach)
 | Weather location | Steinbach, MB / Cochrane, AB |
 | Radio streams | Golden West / Local station |
 
-**What stays the same:** Layout, components, features, auth, database schema — 100% shared codebase.
+### What Stays the Same
+
+Layout, components, features, auth, database schema, and deployment — **100% shared codebase**. Adding a new community site means inserting one row into `site_configs` and pointing a domain in Vercel.
 
 ## Tech Stack
 
