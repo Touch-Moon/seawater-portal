@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
 
 const BANNERS = [
   { id: 1, src: 'https://d3355vjhs3bhr1.cloudfront.net/fit-in/200x100/2023-09/2023-09_RoadReports-KalTire_Feature.png',             alt: 'Road Reports',      href: '#' },
@@ -135,14 +136,14 @@ export default function ContestPanel({ mobile, desktop }: { mobile?: boolean; de
             <div className="contest__slot-row">
               {cur.map((b, i) => (
                 <a key={`cur-${i}`} href={b.href} className="contest__banner">
-                  <img className="contest__banner-img" src={b.src} alt={b.alt} loading="lazy" />
+                  <Image className="contest__banner-img" src={b.src} alt={b.alt} width={160} height={80} loading="lazy" />
                 </a>
               ))}
             </div>
             <div className="contest__slot-row">
               {nxt.map((b, i) => (
                 <a key={`nxt-${i}`} href={b.href} className="contest__banner">
-                  <img className="contest__banner-img" src={b.src} alt={b.alt} loading="lazy" />
+                  <Image className="contest__banner-img" src={b.src} alt={b.alt} width={160} height={80} loading="lazy" />
                 </a>
               ))}
             </div>
@@ -155,7 +156,7 @@ export default function ContestPanel({ mobile, desktop }: { mobile?: boolean; de
         <div className="contest__list-grid">
           {BANNERS.map((b) => (
             <a key={b.id} href={b.href} className="contest__banner">
-              <img className="contest__banner-img" src={b.src} alt={b.alt} loading="lazy" />
+              <Image className="contest__banner-img" src={b.src} alt={b.alt} width={160} height={80} loading="lazy" />
             </a>
           ))}
         </div>

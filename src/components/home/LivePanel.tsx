@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 // LivePanel — left column: 3 live channel cards
 // Same card design as quick-menu__panel--listen
@@ -40,10 +41,12 @@ export default function LivePanel() {
 
             {/* Thumbnail */}
             <div className="live-panel__thumb">
-              <img
+              <Image
                 src={ch.thumb}
                 alt={ch.title}
                 className="live-panel__img"
+                width={240}
+                height={135}
               />
 
               {/* Play overlay — red, shows on hover */}

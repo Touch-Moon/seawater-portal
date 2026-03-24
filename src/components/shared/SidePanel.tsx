@@ -329,7 +329,7 @@ export default function SidePanel({ open, onClose }: SidePanelProps) {
                 style={{ backgroundColor: ch.bg }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="side-panel__listen-logo" src={ch.logo} alt={ch.alt} loading="lazy" />
+                <img className="side-panel__listen-logo" src={ch.logo} alt={ch.alt} width={135} height={64} loading="lazy" />
               </a>
             ))}
           </div>
@@ -355,7 +355,7 @@ export default function SidePanel({ open, onClose }: SidePanelProps) {
                 rel="noopener noreferrer"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="side-panel__listen-logo" src={item.logo} alt={item.alt} loading="lazy" />
+                <img className="side-panel__listen-logo" src={item.logo} alt={item.alt} width={190} height={32} loading="lazy" />
                 <span className="sr-only">(opens in new tab)</span>
               </a>
             ))}

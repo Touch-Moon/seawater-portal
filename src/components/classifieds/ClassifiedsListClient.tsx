@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import type { ClassifiedListItem } from '@/lib/classifieds-mock'
 
 const TABS = ['All', 'For Sale', 'Free'] as const
@@ -63,8 +64,7 @@ export default function ClassifiedsListClient({ items }: ClassifiedsListClientPr
             className="classifieds-list__card"
           >
             <div className="classifieds-list__thumb" aria-hidden="true">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.image} alt="" loading="lazy" />
+              <Image src={item.image} alt={item.title} width={300} height={200} loading="lazy" />
             </div>
             <div className="classifieds-list__info">
               <span className="classifieds-list__card-title">{item.title}</span>

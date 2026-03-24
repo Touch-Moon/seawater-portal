@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import ListPageLayout from '@/components/layout/ListPageLayout'
 import SidebarPanels from '@/components/layout/SidebarPanels'
 import { MOCK_CLASSIFIEDS } from '@/lib/classifieds-mock'
@@ -73,8 +74,7 @@ export default async function ClassifiedDetailPage({
 
         {/* ── Hero image ── */}
         <div className="classified-detail__hero">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={item.image} alt={item.title} />
+          <Image src={item.image} alt={item.title} width={728} height={486} priority />
         </div>
 
         {/* ── Price + Info ── */}
@@ -152,8 +152,7 @@ export default async function ClassifiedDetailPage({
                 className="classified-related__card"
               >
                 <div className="classified-related__thumb">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={r.image} alt="" loading="lazy" />
+                  <Image src={r.image} alt={r.title} width={162} height={108} loading="lazy" />
                 </div>
                 <div className="classified-related__info">
                   <span className="classified-related__name">{r.title}</span>

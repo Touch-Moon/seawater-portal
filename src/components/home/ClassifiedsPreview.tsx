@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
 
 const TABS = ['For Sale', 'Free'] as const
@@ -117,7 +118,7 @@ export default function ClassifiedsPreview() {
         {items.map(item => (
           <Link key={item.id} href={`/classifieds/${item.id}`} className="classifieds-preview__card">
             <div className="classifieds-preview__thumb">
-              <img src={item.image} alt={item.title} loading="lazy" />
+              <Image src={item.image} alt={item.title} width={162} height={108} loading="lazy" />
             </div>
             <div className="classifieds-preview__info">
               <span className="classifieds-preview__card-title">{item.title}</span>
