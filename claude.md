@@ -183,6 +183,73 @@ src/
 - [x] **`content_html` RSC 페이로드 스트립** — 홈 컴포넌트는 본문 HTML 불필요 → `strip()` 헬퍼로 서버에서 제거, 692KB → 308KB
 - [x] **`reactCompiler: false`** — `reactCompiler: true`가 dev 모드에서 `document.readyState = 'complete'` 를 무한 차단하는 버그 확인 → 비활성화. (프로덕션 빌드는 정상 작동 확인)
 - [x] **홈페이지 데스크탑 1.2차 완료** ✅
+- [x] **SidePanelContext** — `src/context/SidePanelContext.tsx` 생성, `Providers`에서 `SidePanel` 단 한 번 렌더, `MenuButton`은 `useSidePanel().openPanel()` 호출만 → DOM 중복 제거
+- [x] **SidePanel 탭 active 동적화** — `useState<'advertise'|'submit'>` 추가, 하드코딩 제거
+- [x] **About 페이지 팀 사진** — steinbachonline.com/team 실제 12명 데이터로 교체, CloudFront CDN에서 200×200px PNG 다운로드 → `/public/team/`, 4-col grid (min-width: 981px)
+- [x] **About 페이지 Contact 블록** — Contact Information + Send Us a Message 폼 섹션 하단 추가
+- [x] **DirectoryPreview** — 우측 사이드바, Supabase `businesses` 상위 3개 (없으면 mock fallback), 알파벳 아이콘 + 이름/카테고리/전화, "View Directory →" 링크, `_directory-preview.scss`
+- [x] **NewsletterPanel** — 우측 사이드바, 이메일 입력 + Subscribe 버튼 (`--color-site-primary`), 제출 시 성공 상태, `_newsletter-panel.scss`
+- [x] **홈페이지 완성** ✅ — 모든 사이드바 패널 포함
+- [x] **Layout Templates 3종** — `ListPageLayout`, `DetailPageLayout`, `StaticPageLayout` + 각 SCSS 완성
+- [x] **Static Pages** — `/about`, `/contact`, `/privacy`, `/terms` 완성 (`StaticPageLayout`)
+- [x] **`/news`** — `ListPageLayout` + RSS 직접 fetch, 카테고리 필터, featured hero 레이아웃
+- [x] **`/news/[slug]`** — `DetailPageLayout` + 기사 본문, 관련 기사 사이드바
+- [x] **`/weather`** — WeatherAPI 현재 날씨 + 시간별/일별 예보 대시보드
+- [x] **`/weather/radar`** — MSC GeoMet WMS + Leaflet 지도
+- [x] **`/events`** — Supabase `events` 캘린더 + 목록 (`ListPageLayout`)
+- [x] **`/events/[slug]`** — 이벤트 상세 (`DetailPageLayout`)
+- [x] **`/listen`** — 3채널 라디오 플레이어 + Now Playing 폴링 (`ListPageLayout`)
+- [x] **`/directory`** — Supabase `businesses` 카테고리별 목록 (`ListPageLayout`)
+- [x] **`/classifieds`** — Supabase `classifieds` 3-col 그리드, All/For Sale/Free 탭 (`ListPageLayout`)
+- [x] **`sitemap.ts`** — XML 자동 생성, 정적 12개 + RSS 뉴스 100개 + Supabase 이벤트 50개 동적 포함
+- [x] **OG Image per route** — root + `/news` + `/weather` + `/events` (edge runtime `ImageResponse`, 1200×630)
+- [x] **`robots.ts`** — `userAgent: *`, allow `/`, disallow `/api/` + `/search?*`, sitemap URL 포함
+- [x] **`not-found.tsx`** — 404 페이지, 그라데이션 "404" 코드 + 홈/뉴스 버튼, `_not-found.scss`
+- [x] **`.env.example`** — Supabase / WeatherAPI / SiteKey / SiteURL 환경변수 문서화
+- [x] **Auth UI 데모** — `/login`, `/signup`, `/forgot-password` (`(auth)` route group, `auth-layout`)
+  - `layout.tsx`: 로고 + 카드 + 푸터 공통 레이아웃
+  - `login/page.tsx`: 이메일/비밀번호, show/hide, Remember me, 시뮬레이션 로딩/에러
+  - `signup/page.tsx`: 이름/이메일/비밀번호/확인, 강도 바, 약관 체크박스, 성공 상태
+  - `forgot-password/page.tsx`: 이메일, 자물쇠 아이콘 헤더, 성공 상태(이메일 발송 확인)
+  - `_auth.scss`: 완전한 BEM 스타일 (`auth-layout`, `auth-card`, 스피너 애니메이션)
+- [x] **SidePanel Sign In → `/login` 링크** — `<button>` → `<Link href="/login">` 교체
+- [x] **`/sitemap` 충돌 수정** — `app/sitemap.ts` default export 제거, `app/sitemap.xml/route.ts` route handler로 XML 서빙, `/ia` 비주얼 IA 뷰어 페이지 유지
+- [x] **멤버쉽 페이지** — `(account)` route group, `_account.scss` 완성
+  - `layout.tsx`: 사이드바 nav (아바타, Profile/Saved/Settings/Sign Out), mobile horizontal scroll
+  - `/account`: 프로필 카드 (아바타+이름+이메일+플랜), Overview 통계 (저장 수/댓글/뉴스레터), 최근 저장 기사 2×2 그리드
+  - `/account/settings`: Profile 정보 수정, 비밀번호 변경 (강도/일치 검증), 알림 토글 (iOS 스타일), Danger Zone (계정 삭제 demo)
+  - `/account/saved`: 저장 기사 전체 목록, 개별 X 버튼 제거, Clear All, Empty state
+  - mock 데이터 12개 기사, 실제 Supabase 연동은 배포 시 교체
+- [x] **실제 Supabase Auth 연동** — UI 데모 → 실제 인증으로 전환
+  - `src/proxy.ts`: 세션 갱신 + `/account/*` 미인증 시 `/login?redirect=` 리디렉트, 로그인 상태에서 `/login·/signup` 접근 시 홈 리디렉트 (Next.js 16 신규 convention)
+  - `login/page.tsx`: `signInWithPassword()` → `router.push(redirect)` + `router.refresh()`
+  - `signup/page.tsx`: `signUp()` → 이메일 확인 화면 (emailRedirectTo: `/account`)
+  - `forgot-password/page.tsx`: `resetPasswordForEmail()` → 성공 화면 (redirectTo: `/account/settings`)
+  - `(account)/layout.tsx`: `supabase.auth.getUser()` + `onAuthStateChange()` → 실제 이름/이메일 표시, Sign Out 핸들러
+  - `(account)/account/page.tsx`: 실제 세션에서 이름·이메일·가입일 읽기 (`date-fns format`)
+  - `SidePanel.tsx`: `onAuthStateChange()` 구독 → 로그인 상태에 따라 Sign In/Out 동적 전환, Sign Out 핸들러
+- [x] **LoginPanel 로그인 상태 재디자인** — height 130px 고정
+  - 상단: 아바타(그라데이션 40px 원형) + 이름 + Sign out 버튼
+  - 하단: Account / Article / Setting 3-item 메뉴 (아이콘 20×20, 16px, #fff, space-between)
+  - Setting 아이콘: gear SVG (톱니바퀴)
+  - `USER_UPDATED` 이벤트 핸들러 → 프로필 수정 즉시 반영 (`resolveUser()` 재호출)
+- [x] **`/account/settings` 실제 Supabase 연동** — MOCK 제거
+  - `getUser()` → 실제 닉네임/이메일 로드
+  - `updateUser({ data: { nickname, full_name } })` → 저장 시 Supabase 반영
+  - `nickname` 우선 읽기로 LoginPanel / account/page / settings 전체 통일
+- [x] **Subscribe 버튼 제거** — `page__hero__actions` + `StickySearchBar`에서 삭제
+- [x] **`page__hero__actions` 레이아웃** — 버튼 1개 기준으로 수정
+  - 672px~1199px: `width: 48px`, `justify-content: flex-end`
+  - 1200px+: `width: 96px` (::before spacer와 대칭 유지, SearchBar 중앙 정렬)
+- [x] **아바타 컬러 통일** — `login-panel__avatar`, `side-panel__avatar`, `account-nav__avatar`, `account-profile__avatar` 모두 `linear-gradient(135deg, #4aabf7, #8e54e9)` + `color: #fff` + `border-radius: 50%`
+- [x] **SidePanel 아바타 이니셜** — SVG person 아이콘 제거, 로그인 시 이름 첫 글자 / 비로그인 시 `?` 표시 (40×40)
+- [x] **SidePanel 뉴스레터 폼** — `side-panel__subscription-btn` 대신 `newsletter-panel__form` (이메일 입력 + Subscribe 버튼) 삽입
+- [x] **account 레이아웃 헤더** — `ListPageHeader` (`list-page__head`) 최상단 추가
+- [x] **Text Size 기능 구현** — Daum 방식 `zoom` 적용
+  - `SettingsButton`: `data-text-size` 속성 → `body { zoom }` + `localStorage` 저장/복원
+  - `SidePanel` A+ 버튼 → `FontSizeModal` (createPortal) 오픈
+  - `FontSizeModal`: 미리보기 텍스트 + A 크기 버튼 3개 + Cancel/Apply (all English UI)
+  - `globals.scss`: `body { zoom: 1.1 / 1.2 }` + fixed 요소 역보정 (`side-panel: 0.9091 / 0.8333`, `font-modal__backdrop: 0.9091 / 0.8333`)
 
 ### SearchBar Details
 - Gradient border pill (`linear-gradient` wrapper + `padding: 1px`)
@@ -283,8 +350,8 @@ section.home
     WeatherWidget    ← compact 카드    ✅ (API 연동 완료)
     ContestPanel     ← 슬롯머신 토글   ✅
     EventsPanel      ← 캘린더 위젯     ✅ (mock data)
-    DirectoryPreview ← 비즈니스 3개 카드 + "View All" 링크  🔲
-    NewsletterPanel  ← 이메일 구독 CTA                      🔲
+    DirectoryPreview ← 비즈니스 3개 카드 + "View All" 링크  ✅
+    NewsletterPanel  ← 이메일 구독 CTA                      ✅
 Footer               ← 글로벌 layout 컴포넌트               ✅ (정적)
 ```
 
@@ -371,66 +438,94 @@ Footer               ← 글로벌 layout 컴포넌트               ✅ (정적
 
 레이아웃 템플릿 3종 + 독립 페이지 4종 + 인프라 순서로 진행.
 
-#### 🔲 Homepage Panels (홈페이지 미완성 패널)
+#### ✅ Homepage Panels — 완료
 
 | 상태 | 컴포넌트 | 위치 | 설명 | 데이터 소스 |
 |---|---|---|---|---|
-| 🔲 | `SportsPanel` | home__main | NewsPanel 동일 구조, Local Sports 카테고리 고정 | `rss.ts` (local-sports) |
-| ✅ | `ClassifiedsPreview` | home__main | Buy & Sell, 탭(For Sale/Jobs/Vehicles), 2×3 그리드, mock 18개 | mock → Supabase `classifieds` |
-| 🔲 | `NewsAdBanner2` | home__main | SportsPanel 하단 두 번째 광고 배너 (728×90) | static |
-| 🔲 | `DirectoryPreview` | home__sidebar | 로컬 비즈니스 3개 카드 + "View Directory" 링크 | Supabase `businesses` |
-| 🔲 | `NewsletterPanel` | home__sidebar | 이메일 구독 CTA (입력 + 버튼), 정적 UI | static |
-| ✅ | `Footer` | layout (global) | Notice 바 + 링크 + 소셜 아이콘 + Legal + 저작권, 모든 페이지 공유 | static |
+| ✅ | `ClassifiedsPreview` | home__main | Buy & Sell, 탭(For Sale/Jobs/Vehicles), 2×3 그리드 | mock → Supabase `classifieds` |
+| ✅ | `DirectoryPreview` | home__sidebar | 로컬 비즈니스 3개 카드 + "View Directory" 링크 | Supabase `businesses` (mock fallback) |
+| ✅ | `NewsletterPanel` | home__sidebar | 이메일 구독 CTA (입력 + 버튼), 정적 UI | static |
+| ✅ | `Footer` | layout (global) | Notice 바 + 링크 + 소셜 아이콘 + Legal + 저작권 | static |
 
-> **SportsPanel 구현 팁:** `NewsPanel`에 `category` prop 추가 → `SportsPanel`은 `<NewsPanel category="sports" title="Local Sports" icon="/ico-sports.svg" />` 형태로 재사용.
+#### ✅ Layout Templates — 완료
 
-#### 🔲 Layout Templates (먼저 만들어야 나머지가 빠름)
-
-| 우선순위 | 작업 | 파일 | 적용 페이지 |
+| 상태 | 작업 | 파일 | 적용 페이지 |
 |---|---|---|---|
-| **1** | `ListPageLayout` | `components/layout/ListPageLayout.tsx` + `_list-page.scss` | `/news`, `/events`, `/directory`, `/classifieds` |
-| **2** | `DetailPageLayout` | `components/layout/DetailPageLayout.tsx` + `_detail-page.scss` | `/news/[slug]`, `/events/[slug]` |
-| **3** | `StaticPageLayout` | `components/layout/StaticPageLayout.tsx` + `_static-page.scss` | `/about`, `/contact`, `/privacy`, `/terms` |
+| ✅ | `ListPageLayout` | `components/layout/ListPageLayout.tsx` + `_list-page.scss` | `/news`, `/events`, `/directory`, `/classifieds` |
+| ✅ | `DetailPageLayout` | `components/layout/DetailPageLayout.tsx` + `_detail-page.scss` | `/news/[slug]`, `/events/[slug]` |
+| ✅ | `StaticPageLayout` | `components/layout/StaticPageLayout.tsx` + `_static-page.scss` | `/about`, `/contact`, `/privacy`, `/terms` |
 
-#### 🔲 P0 — Core Pages
+#### ✅ P0 — Core Pages — 완료
 
 | 상태 | 페이지 | 레이아웃 | 데이터 소스 |
 |---|---|---|---|
-| ✅ Done | `/` Home | 독립 (완성) | weather.ts + mock |
-| 🔲 Next | `/news` | `ListPageLayout` | `rss.ts` → RSS 직접 fetch |
-| 🔲 | `/news/[slug]` | `DetailPageLayout` | `rss.ts` (slug 기반 fetch) |
+| ✅ | `/` Home | 독립 | weather.ts + RSS |
+| ✅ | `/news` | `ListPageLayout` | `rss.ts` → RSS 직접 fetch |
+| ✅ | `/news/[slug]` | `DetailPageLayout` | `rss.ts` (slug 기반 fetch) |
 
-#### 🔲 P1 — Important Pages
-
-| 상태 | 페이지 | 레이아웃 | 데이터 소스 |
-|---|---|---|---|
-| 🔲 | `/weather` | 독립 (대시보드형) | `weather.ts` (WeatherAPI) + `radar.ts` (EC Alerts) |
-| 🔲 | `/weather/radar` | 독립 (전체화면 지도) | `radar.ts` (MSC GeoMet WMS) + leaflet |
-| 🔲 | `/events` | `ListPageLayout` | Supabase `events` 테이블 |
-| 🔲 | `/events/[slug]` | `DetailPageLayout` | Supabase `events` 테이블 |
-| 🔲 | `/listen` | 독립 (미디어 플레이어) | `radio.ts` + `/api/radio/now-playing` |
-
-#### 🔲 P2 — Later Pages
+#### ✅ P1 — Important Pages — 완료
 
 | 상태 | 페이지 | 레이아웃 | 데이터 소스 |
 |---|---|---|---|
-| 🔲 | `/directory` | `ListPageLayout` | Supabase `businesses` 테이블 |
-| 🔲 | `/classifieds` | `ListPageLayout` | Supabase `classifieds` 테이블 |
+| ✅ | `/weather` | 독립 (대시보드형) | `weather.ts` (WeatherAPI) |
+| ✅ | `/weather/radar` | 독립 (전체화면 지도) | `radar.ts` (MSC GeoMet WMS) + leaflet |
+| ✅ | `/events` | `ListPageLayout` | Supabase `events` 테이블 |
+| ✅ | `/events/[slug]` | `DetailPageLayout` | Supabase `events` 테이블 |
+| ✅ | `/listen` | 독립 (미디어 플레이어) | `radio.ts` + `/api/radio/now-playing` |
 
-#### 🔲 Static Footer Pages (StaticPageLayout 완성 후 빠르게 처리)
+#### ✅ P2 — Later Pages — 완료
 
-`/about`, `/contact`, `/privacy`, `/terms` — 정적 텍스트, Supabase 불필요
+| 상태 | 페이지 | 레이아웃 | 데이터 소스 |
+|---|---|---|---|
+| ✅ | `/directory` | `ListPageLayout` | Supabase `businesses` 테이블 |
+| ✅ | `/classifieds` | `ListPageLayout` | Supabase `classifieds` 테이블 |
 
-#### 🔲 인프라 / 기타
+#### ✅ Static Footer Pages — 완료
+
+`/about`, `/contact`, `/privacy`, `/terms` — 정적 텍스트 (`StaticPageLayout`)
+
+#### 인프라 / 기타
 
 | 상태 | 작업 |
 |---|---|
-| 🔲 | `/api/radio/now-playing` — CORS 프록시 API Route |
-| 🔲 | RSS 직접 fetch vs Supabase sync 방식 결정 |
-| 🔲 | `next/sitemap` XML 자동 생성 (`sitemap.ts`) |
-| 🔲 | OG Image (`opengraph-image.tsx` per route) |
-| 🔲 | Vercel 배포 + 환경변수 설정 |
+| ✅ | `/api/radio/now-playing` — CORS 프록시 API Route |
+| ✅ | RSS 직접 fetch (Option A) 결정 및 적용 |
+| ✅ | `sitemap.ts` 충돌 해결 → `app/sitemap.xml/route.ts` route handler로 전환, `/ia` 비주얼 페이지 유지 |
+| ✅ | OG Image — root `opengraph-image.tsx` + `/news`, `/weather`, `/events` 커스텀 |
+| ✅ | `robots.ts` — crawl rules + sitemap URL |
+| ✅ | `not-found.tsx` — 404 페이지 + `_not-found.scss` |
+| ✅ | `.env.example` — 환경변수 문서화 |
+| ✅ | Auth UI 데모 — `(auth)` route group: `/login`, `/signup`, `/forgot-password` |
+| ✅ | SidePanel / LoginPanel Sign In → `/login` 링크 연결 |
+| ✅ | 멤버쉽 페이지 구현 — `/account`, `/account/settings`, `/account/saved` (`(account)` route group) |
+| 🔲 | Vercel 배포 + 환경변수 설정 (`NEXT_PUBLIC_SITE_URL`, `WEATHER_API_KEY`, Supabase keys) |
 | 🔲 | Mac Mini Supabase keep-alive cron job |
+
+### DirectoryPreview Details
+- 파일: `src/components/home/DirectoryPreview.tsx`, `_directory-preview.scss`
+- **Server Component (async)** — `getBusinesses()` 호출, 결과 없으면 `MOCK_BUSINESSES` fallback, `.slice(0, 3)`
+- **구조**: `__header` (Directory > 링크) → `__list` (3개 `__item`) → `__footer` ("View Directory →")
+- `__icon`: 40×40px 원형 알파벳 아이콘, `background: var(--color-bg-secondary)`
+- `__name`: 15px medium, ellipsis / `__category`, `__phone`: 12px tertiary
+- mobile/desktop prop 지원, 다크/라이트 대응
+
+### NewsletterPanel Details
+- 파일: `src/components/home/NewsletterPanel.tsx`, `_newsletter-panel.scss`
+- `'use client'` — `useState(email)` + `useState(submitted)`
+- **구조**: `__header` (그라데이션 아이콘 + title/subtitle) → `__form` (input + btn) → `__note`
+- 아이콘: `linear-gradient(135deg, #4aabf7, #8e54e9)` 40px 박스
+- 제출 후: `__success` 상태 표시 (파란 체크박스)
+- `__btn`: `--color-site-primary` 배경, 100% 너비
+- `__note`: "Free · No spam · Unsubscribe anytime" 11px tertiary 중앙정렬
+- TODO: 실제 뉴스레터 API 연동
+
+### Auth UI 데모 Details
+- Route group: `src/app/(auth)/` — 공통 `layout.tsx` (로고 + 카드 + 푸터)
+- `layout.tsx`: `auth-layout` 래퍼, 로고(`/ico-logo-brandcolor.svg`), `auth-layout__card` 안에 `children`, 저작권 푸터
+- `login/page.tsx`: `'use client'`, 이메일+비밀번호, show/hide 눈 버튼, Remember me 체크박스, 1.2s 시뮬레이션, 6자 미만 → 에러, 성공 → `window.location.href = '/'`
+- `signup/page.tsx`: `'use client'`, 이름+이메일+비밀번호+확인, 강도 바(weak/medium/strong), 확인 불일치 인라인 에러, 약관 체크박스, 1.4s 시뮬레이션, 성공 → 이메일 표시 화면
+- `forgot-password/page.tsx`: `'use client'`, 이메일만, 자물쇠 아이콘 헤더, 1s 시뮬레이션, 성공 → 이메일 아이콘 + "Check your email" + Try again
+- `_auth.scss`: `.auth-layout` (100dvh 중앙), `.auth-layout__card` (max-width 440px, surface bg, 라이트 shadow), `.auth-card` 모든 하위 BEM (`__title`, `__subtitle`, `__error`, `__form`, `__field`, `__label-row`, `__label`, `__forgot`, `__input-wrap`, `__input`, `__eye-btn`, `__field-error`, `__strength`, `__strength-bar--{weak,medium,strong}`, `__checkbox-row`, `__checkbox`, `__submit`, `__spinner`, `__switch`, `__switch-link`, `__success`, `__success-icon`), `@keyframes auth-spin`
 
 ### content_html Strip 패턴 (필수 유지)
 - **이유:** RSS 기사의 `content_html`(전체 HTML 본문)이 RSC 페이로드에 포함되면 692KB+ 로 불어남
@@ -444,6 +539,38 @@ Footer               ← 글로벌 layout 컴포넌트               ✅ (정적
   - 원인: React Compiler가 dev 모드에서 `document.readyState = 'complete'` 이벤트를 차단
   - 프로덕션 빌드(`next build`)에서는 문제 없음, 개발 서버(`next dev`)에서만 발생
 - **`devIndicators: false`** — Next.js 개발 배지 숨김 (유지)
+
+### Next.js 16 Proxy (Middleware) 주의사항
+- **Next.js 16에서 `middleware.ts` → `proxy.ts`로 convention 변경**
+- 실제 auth 로직: `src/proxy.ts` (Supabase 세션 갱신 + `/account/*` 보호)
+- `src/middleware.ts` → `src/middleware.ts.bak`으로 이름 변경 (충돌 방지)
+- `middleware.ts` (루트) → `middleware.ts.bak`으로 이름 변경 (충돌 방지)
+- Next.js 16은 `middleware.ts`와 `proxy.ts`가 동시에 존재하면 빌드 에러 발생
+- `src/proxy.ts`만 남겨야 함
+
+### Text Size (Zoom) 구현 상세
+- **방식:** `body { zoom }` (Daum 동일) — 텍스트+레이아웃 전체 비율 확대
+- **적용:** `globals.scss` — `:root[data-text-size='large'] body { zoom: 1.1 }`, `larger: 1.2`
+- **fixed 요소 역보정:** zoom이 fixed 자식에도 상속되므로 side-panel + font-modal에 역보정 적용
+  - `large`: `zoom: 0.9091` (1/1.1), `larger`: `zoom: 0.8333` (1/1.2)
+- **SettingsButton:** `data-text-size` → `html` 속성 + `localStorage('text-size')` 저장
+- **FontSizeModal:** `createPortal` → `document.body`, Esc 닫기, Cancel/Apply 버튼
+- **공유:** SettingsButton + SidePanel A+ 버튼이 동일 `localStorage` 키 공유 → 양쪽 연동
+
+### 아바타 공통 스타일 (필수 준수)
+- `background: linear-gradient(135deg, #4aabf7, #8e54e9)`
+- `color: #fff`
+- `border-radius: 50%`
+- 텍스트: 이름 첫 글자 대문자 (비로그인: `?`)
+- 적용: `login-panel__avatar` (40px) / `side-panel__avatar` (40px) / `account-nav__avatar` (44px) / `account-profile__avatar` (72px)
+
+### LoginPanel --logged-in 상세
+- `height: 130px` 고정, `overflow: hidden`, `padding: 12px 20px`
+- `__top`: 아바타 + 이름 (Link→/account) + Sign out 버튼
+- `__sep`: `margin: 8px 0` 구분선
+- `__menu`: `justify-content: space-between`, `padding-top: 4px`
+- `__menu-item`: `flex-direction: row`, `gap: 6px`, `font-size: 16px`, `color: #fff`, icon `20×20`
+- 라이트모드: `__menu-item color: var(--color-text-primary)`
 
 ### getTrendingArticles 사용법
 - 카테고리별 trending: `getTrendingArticles({ category: 'sports', limit: 27 })`
@@ -471,10 +598,10 @@ Footer               ← 글로벌 layout 컴포넌트               ✅ (정적
 | 소스 | 파일 | 상태 | 비고 |
 |------|------|------|------|
 | **WeatherAPI** | `src/lib/weather.ts` | ✅ 연동 완료 | API 키 활성, ISR 300s |
-| **RSS 뉴스 피드** | `src/lib/rss.ts` | ✅ 코드 준비 | 8개 카테고리, 아직 미연결 |
-| **MSC GeoMet WMS (레이더)** | `src/lib/radar.ts` | ✅ 코드 준비 | `geo.weather.gc.ca`, 무료/키 불필요 |
-| **EC 날씨 경보 ATOM** | `src/lib/radar.ts` | ✅ 코드 준비 | `weather.gc.ca/rss/city/mb-24_e.xml` |
-| **Golden West Streaming** | `src/lib/radio.ts` | ✅ 코드 준비 | 3채널 콘솔 + RDS Now Playing |
+| **RSS 뉴스 피드** | `src/lib/rss.ts` | ✅ 연동 완료 | 8개 카테고리, ISR 60s, /news + 홈페이지 적용 |
+| **MSC GeoMet WMS (레이더)** | `src/lib/radar.ts` | ✅ 연동 완료 | `/weather/radar` Leaflet 지도 적용 |
+| **EC 날씨 경보 ATOM** | `src/lib/radar.ts` | ✅ 연동 완료 | `/weather` 경보 사이드바 적용 |
+| **Golden West Streaming** | `src/lib/radio.ts` | ✅ 연동 완료 | `/listen` + `/api/radio/now-playing` 프록시 |
 | **Vercel OG Image** | — | 🔲 미착수 | 배포 시 구현 |
 
 ### RSS 피드 엔드포인트
@@ -532,13 +659,10 @@ Footer               ← 글로벌 layout 컴포넌트               ✅ (정적
 | `/directory` | Supabase `businesses` | — | 3600s |
 | `/classifieds` | Supabase `classifieds` | — | 60s |
 
-### RSS fetch 전략 (결정 필요)
-- **Option A — RSS 직접 fetch (권장):** `rss.ts`로 페이지 렌더 시 직접 fetch, ISR 60s
-  - 장점: Supabase sync 불필요, 항상 최신
-  - 단점: steinbachonline.com 의존, slug 매핑 필요
-- **Option B — RSS → Supabase sync:** cron job으로 RSS 파싱 후 `articles` 테이블 저장
-  - 장점: 오프라인 캐시, full-text search 가능
-  - 단점: cron 인프라 필요 (Vercel Cron or Mac Mini)
+### RSS fetch 전략 — ✅ Option A 결정 및 적용
+- **Option A — RSS 직접 fetch:** `rss.ts`로 페이지 렌더 시 직접 fetch, ISR 60s
+  - 홈페이지 + `/news` 페이지에 적용 완료
+  - steinbachonline.com RSS 엔드포인트 직접 사용
 
 ### 연동 시 필요 패키지
 - `leaflet` + `react-leaflet` + `@types/leaflet` — 레이더 지도
