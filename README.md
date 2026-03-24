@@ -118,7 +118,7 @@ This project was audited and remediated for WCAG 2.1 AA compliance across three 
 | **Semantic HTML** | `<nav>`, `<main>`, `<article>`, proper heading hierarchy (`h1` → `h2` → `h3`) |
 | **Forms** | `autoComplete` attributes, `aria-label` on inputs, inline error messages, password strength indicators |
 
-> **Lighthouse Scores:** Performance **79** · Accessibility **97** · Best Practices **96** · SEO **100**
+> **Lighthouse Scores:** Performance **86** · Accessibility **97** · Best Practices **96** · SEO **100**
 
 ## Multi-Site Architecture
 
