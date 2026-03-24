@@ -253,6 +253,8 @@ interface NewsPanelProps {
   variant?: 'default' | 'sports' | 'community' | 'local' | 'national' | 'sponsored'
   articles?: RssArticle[]
   categoryArticles?: CategoryArticles
+  /** Mark first grid images as priority for LCP */
+  priority?: boolean
 }
 
 export default function NewsPanel({
@@ -263,6 +265,7 @@ export default function NewsPanel({
   variant = 'default',
   articles,
   categoryArticles,
+  priority = false,
 }: NewsPanelProps) {
   const { width } = useBreakpoint()
   const gridCount        = width < 880 ? 2 : width < 981 ? 3 : 4
@@ -652,7 +655,7 @@ export default function NewsPanel({
         /* 소형 태블릿: 모든 variant → default (grid + list) 레이아웃 */
         <div className="news-panel__body">
           <div className="news-panel__grid">
-            {displayGrid.map((article) => (
+            {displayGrid.map((article, idx) => (
               <Link key={article.id} href={article.href} className="news-panel__card">
                 <div className="news-panel__thumb-wrap">
                   <Image
@@ -662,6 +665,7 @@ export default function NewsPanel({
                     fill
                     sizes="(max-width: 671px) 42vw, (max-width: 980px) 30vw, 167px"
                     style={{ objectFit: 'cover' }}
+                    {...(priority && idx < 2 ? { priority: true } : { loading: 'lazy' as const })}
                   />
                 </div>
                 <div className="news-panel__card-info">
@@ -841,7 +845,7 @@ export default function NewsPanel({
 
           {/* Left: 2×2 image grid */}
           <div className="news-panel__grid">
-            {displayGrid.map((article) => (
+            {displayGrid.map((article, idx) => (
               <Link key={article.id} href={article.href} className="news-panel__card">
                 <div className="news-panel__thumb-wrap">
                   <Image
@@ -851,6 +855,7 @@ export default function NewsPanel({
                     fill
                     sizes="(max-width: 671px) 42vw, (max-width: 980px) 30vw, 167px"
                     style={{ objectFit: 'cover' }}
+                    {...(priority && idx < 2 ? { priority: true } : { loading: 'lazy' as const })}
                   />
                 </div>
                 <div className="news-panel__card-info">

@@ -70,6 +70,7 @@ export async function TopNewsPanelFetcher() {
     <NewsPanel
       articles={strip(localNews)}
       categoryArticles={categoryArticles}
+      priority
     />
   )
 }

@@ -113,9 +113,12 @@
     display: flex;
     gap: 20px;
     padding-top: 16px;
+    // Reserve space to prevent CLS during hydration
+    min-height: 340px;
 
     @media (max-width: 1199px) {
       flex-direction: column;
+      min-height: 0; // mobile/tablet: let content dictate height
     }
 
     // ≤ 878px: list on top, grid below
