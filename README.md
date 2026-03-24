@@ -10,8 +10,7 @@
 
 ## Demo
 
-> 🔗 **Live:** [Coming soon — deploying to Vercel]
-<!-- Replace with actual URL after deployment -->
+> 🔗 **Live:** [seawater-portal.vercel.app](https://seawater-portal.vercel.app)
 
 ## Screenshots
 
@@ -119,8 +118,7 @@ This project was audited and remediated for WCAG 2.1 AA compliance across three 
 | **Semantic HTML** | `<nav>`, `<main>`, `<article>`, proper heading hierarchy (`h1` → `h2` → `h3`) |
 | **Forms** | `autoComplete` attributes, `aria-label` on inputs, inline error messages, password strength indicators |
 
-> **Lighthouse Accessibility Score:** _XX / 100_ — to be measured after deployment
-<!-- Update score after Vercel deployment -->
+> **Lighthouse Scores:** Performance **73** · Accessibility **97** · Best Practices **96** · SEO **100**
 
 ## Multi-Site Architecture
 
