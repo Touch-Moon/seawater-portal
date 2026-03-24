@@ -14,14 +14,35 @@ const BANNERS = [
 
 const N = BANNERS.length
 
-export default function ContestPanel() {
+// 태블릿(672~1199px): 사이드바 300px → 1개씩
+// 모바일(<672px) + 데스크탑(≥1200px): 2개씩
+function getStep() {
+  if (typeof window === 'undefined') return 2
+  const w = window.innerWidth
+  return w >= 672 && w <= 1199 ? 1 : 2
+}
+
+export default function ContestPanel({ mobile, desktop }: { mobile?: boolean; desktop?: boolean } = {}) {
   const [startIdx, setStartIdx]     = useState(0)
   const [sliding, setSliding]       = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
+  const [step, setStep]             = useState(2)
   const intervalRef                 = useRef<ReturnType<typeof setInterval> | null>(null)
-  // ref로 관리 → 클로저 stale 문제 없음
   const isHoveredRef                = useRef(false)
   const isExpandedRef               = useRef(false)
+  const stepRef                     = useRef(2)
+
+  // step 초기화 + resize 대응
+  useEffect(() => {
+    const update = () => {
+      const s = getStep()
+      stepRef.current = s
+      setStep(s)
+    }
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
 
   // isExpanded ref 동기화
   useEffect(() => {
@@ -32,6 +53,7 @@ export default function ContestPanel() {
 
   function startInterval() {
     if (intervalRef.current) clearInterval(intervalRef.current)
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     intervalRef.current = setInterval(() => {
       if (!isHoveredRef.current && !isExpandedRef.current) {
         setSliding(true)
@@ -59,25 +81,25 @@ export default function ContestPanel() {
 
   const handleMouseLeave = () => {
     isHoveredRef.current = false
-    if (!isExpandedRef.current) {
-      // 새 인터벌 시작 (3초 후 첫 롤링)
-      startInterval()
-    }
+    if (!isExpandedRef.current) startInterval()
   }
 
   const handleTransitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
-    // transform 이외의 property나 자식에서 버블업된 이벤트 무시
     if (e.propertyName !== 'transform' || e.target !== e.currentTarget) return
-    setStartIdx(prev => (prev + 2) % N)
+    setStartIdx(prev => (prev + stepRef.current) % N)
     setSliding(false)
   }
 
-  const cur = [BANNERS[startIdx % N], BANNERS[(startIdx + 1) % N]]
-  const nxt = [BANNERS[(startIdx + 2) % N], BANNERS[(startIdx + 3) % N]]
+  const cur = step === 1
+    ? [BANNERS[startIdx % N]]
+    : [BANNERS[startIdx % N], BANNERS[(startIdx + 1) % N]]
+  const nxt = step === 1
+    ? [BANNERS[(startIdx + 1) % N]]
+    : [BANNERS[(startIdx + 2) % N], BANNERS[(startIdx + 3) % N]]
 
   return (
     <div
-      className="contest"
+      className={`contest${mobile ? ' contest--mobile' : ''}${desktop ? ' contest--desktop' : ''}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -87,7 +109,7 @@ export default function ContestPanel() {
         <a href="#" className="contest__title-wrap">
           <div className="contest__title-link">
             Contest
-            <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 18 18" fill="none" >
               <path d="M7 4l5 5-5 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
@@ -105,7 +127,7 @@ export default function ContestPanel() {
 
       {/* ── Slot machine (collapsed) ── */}
       <div className={`contest__body${isExpanded ? ' contest__body--hidden' : ''}`}>
-        <div className="contest__slot-window">
+        <div className={`contest__slot-window${step === 1 ? ' contest__slot-window--single' : ''}`}>
           <div
             className={`contest__slot-track${sliding ? ' contest__slot-track--sliding' : ''}`}
             onTransitionEnd={handleTransitionEnd}

@@ -2,7 +2,9 @@
 
 import { useState, useRef, useEffect, useMemo } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import type { RssArticle } from '@/lib/rss'
+import { useBreakpoint } from '@/hooks/useBreakpoint'
 
 const TABS = [
   { id: 'top',       label: 'Top News',  href: '/news',           dropdown: true  },
@@ -39,7 +41,7 @@ const DROPDOWN_ITEMS = [
     label: 'Top News',
     shortLabel: 'Top',
     icon: (
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" >
         <rect x="2" y="2" width="14" height="3" rx="1" fill="currentColor" opacity="0.5"/>
         <rect x="2" y="7" width="14" height="3" rx="1" fill="currentColor" opacity="0.75"/>
         <rect x="2" y="12" width="14" height="3" rx="1" fill="currentColor"/>
@@ -51,7 +53,7 @@ const DROPDOWN_ITEMS = [
     label: 'Latest News',
     shortLabel: 'Latest',
     icon: (
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" >
         <circle cx="9" cy="9" r="7" stroke="currentColor" strokeWidth="1.4"/>
         <path d="M9 5v4l2.5 2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
@@ -62,7 +64,7 @@ const DROPDOWN_ITEMS = [
     label: 'Trending',
     shortLabel: 'Trending',
     icon: (
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" >
         <rect x="2" y="11" width="3" height="5" rx="1" fill="currentColor"/>
         <rect x="7" y="7" width="3" height="9" rx="1" fill="currentColor"/>
         <rect x="12" y="3" width="3" height="13" rx="1" fill="currentColor"/>
@@ -218,7 +220,7 @@ function toGridItem(a: RssArticle, i: number) {
     title: a.title,
     source: a.author || 'Steinbach Online',
     image: a.featured_image || `https://picsum.photos/seed/${encodeURIComponent(a.slug)}/400/225`,
-    href: a.link,
+    href: `/news/${a.slug}`,
   }
 }
 
@@ -228,7 +230,7 @@ function toThumbItem(a: RssArticle, i: number) {
     title: a.title,
     source: a.author || 'Steinbach Online',
     image: a.featured_image || `https://picsum.photos/seed/${encodeURIComponent(a.slug)}/266/154`,
-    href: a.link,
+    href: `/news/${a.slug}`,
   }
 }
 
@@ -262,13 +264,19 @@ export default function NewsPanel({
   articles,
   categoryArticles,
 }: NewsPanelProps) {
+  const { width } = useBreakpoint()
+  const gridCount        = width < 880 ? 2 : width < 981 ? 3 : 4
+  const listCount        = width < 880 ? 4 : width < 981 ? 5 : 8
+  const useTabsMoreBtn   = width < 981  // ≤ 980px: hide tabs, show ... button
+
   const [activeTab, setActiveTab] = useState('top')
   const [currentPage, setCurrentPage] = useState(1)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [activeSort, setActiveSort] = useState('top')
-  const [dropdownLeft, setDropdownLeft] = useState(0)
+  const [dropdownPos, setDropdownPos] = useState<{ left?: number; right?: number }>({})
   const dropdownRef = useRef<HTMLDivElement>(null)
   const topNewsBtnRef = useRef<HTMLButtonElement>(null)
+  const moreTabBtnRef = useRef<HTMLButtonElement>(null)
 
   // ── Effective variant: tab-driven for Top News, prop for others ──
   const effectiveVariant = useMemo(() => {
@@ -330,12 +338,14 @@ export default function NewsPanel({
   const rssAvailable = currentTabArticles.length > 0
 
   // ── Page size ──
+  // 소형 태블릿: 모든 variant → default (gridCount + listCount)
   const pageSize = useMemo(() => {
+    if (useTabsMoreBtn)                   return gridCount + listCount
     if (effectiveVariant === 'sports')    return PS_SPORTS
     if (effectiveVariant === 'community') return PS_COMM
     if (effectiveVariant === 'default')   return PS_DEFAULT
     return PS_THUMB
-  }, [effectiveVariant])
+  }, [useTabsMoreBtn, gridCount, listCount, effectiveVariant])
 
   // ── Extend RSS with filler to guarantee TARGET_PAGES pages ──
   // Page 1 = 순수 RSS (filler 절대 미사용). Pages 2+ = RSS 소진 후 filler 보충.
@@ -373,20 +383,20 @@ export default function NewsPanel({
 
   // ── Display data (RSS slice or mock fallback) ──
 
-  // default / ag
+  // default / ag — gridCount: 3 on small tablet, 4 otherwise
   const displayGrid = rssAvailable
-    ? pageSlice.slice(0, 4).map(toGridItem)
-    : GRID_ARTICLES
+    ? pageSlice.slice(0, gridCount).map(toGridItem)
+    : GRID_ARTICLES.slice(0, gridCount)
   const displayList = rssAvailable
-    ? pageSlice.slice(4, 12).map((a, i) => ({ id: i + 4, title: a.title, breaking: false, href: a.link }))
-    : LIST_ARTICLES
+    ? pageSlice.slice(gridCount, gridCount + listCount).map((a, i) => ({ id: i + gridCount, title: a.title, breaking: false, href: `/news/${a.slug}` }))
+    : LIST_ARTICLES.slice(gridCount - 4, gridCount - 4 + listCount)
 
   // sports
   const displaySportsFeatured = rssAvailable && pageSlice[0]
-    ? { ...SPORTS_FEATURED, title: pageSlice[0].title, image: pageSlice[0].featured_image || SPORTS_FEATURED.image, href: pageSlice[0].link }
+    ? { ...SPORTS_FEATURED, title: pageSlice[0].title, image: pageSlice[0].featured_image || SPORTS_FEATURED.image, href: `/news/${pageSlice[0].slug}` }
     : SPORTS_FEATURED
   const displaySportsTextList = rssAvailable
-    ? pageSlice.slice(1, 5).map((a, i) => ({ id: i + 1, title: a.title, breaking: false, href: a.link }))
+    ? pageSlice.slice(1, 5).map((a, i) => ({ id: i + 1, title: a.title, breaking: false, href: `/news/${a.slug}` }))
     : SPORTS_TEXT_LIST
   const displaySportsThumbList = rssAvailable
     ? pageSlice.slice(5, 9).map(toThumbItem)
@@ -415,10 +425,9 @@ export default function NewsPanel({
   // ── Outside click closes dropdown ──
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (
-        dropdownRef.current && !dropdownRef.current.contains(e.target as Node) &&
-        topNewsBtnRef.current && !topNewsBtnRef.current.contains(e.target as Node)
-      ) {
+      const target = e.target as Node
+      const clickedBtn = topNewsBtnRef.current?.contains(target) || moreTabBtnRef.current?.contains(target)
+      if (dropdownRef.current && !dropdownRef.current.contains(target) && !clickedBtn) {
         setDropdownOpen(false)
       }
     }
@@ -426,16 +435,45 @@ export default function NewsPanel({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [dropdownOpen])
 
-  // ── Measure dropdown left position ──
+  // ── Measure dropdown position ──
+  // •••  버튼: right 기준 (오른쪽 라인 맞춤)
+  // Top News 버튼: left 기준 (왼쪽 라인 맞춤)
   useEffect(() => {
-    if (dropdownOpen && topNewsBtnRef.current) {
-      const panel = topNewsBtnRef.current.closest('.news-panel') as HTMLElement | null
+    const btn = useTabsMoreBtn ? moreTabBtnRef.current : topNewsBtnRef.current
+    if (dropdownOpen && btn) {
+      const panel = btn.closest('.news-panel') as HTMLElement | null
       if (panel) {
         const panelRect = panel.getBoundingClientRect()
-        const btnRect   = topNewsBtnRef.current.getBoundingClientRect()
-        setDropdownLeft(btnRect.left - panelRect.left)
+        const btnRect   = btn.getBoundingClientRect()
+        if (useTabsMoreBtn) {
+          setDropdownPos({ right: panelRect.right - btnRect.right })
+        } else {
+          setDropdownPos({ left: btnRect.left - panelRect.left })
+        }
       }
     }
+  }, [dropdownOpen, useTabsMoreBtn])
+
+  // ── Dropdown: focus first item + arrow key navigation ──
+  useEffect(() => {
+    if (!dropdownOpen || !dropdownRef.current) return
+    const items = dropdownRef.current.querySelectorAll<HTMLElement>('[role="menuitem"]')
+    if (items.length > 0) items[0].focus()
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (!dropdownRef.current) return
+      const list = Array.from(dropdownRef.current.querySelectorAll<HTMLElement>('[role="menuitem"]'))
+      const idx = list.indexOf(document.activeElement as HTMLElement)
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        list[(idx + 1) % list.length]?.focus()
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        list[(idx - 1 + list.length) % list.length]?.focus()
+      }
+    }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
   }, [dropdownOpen])
 
   return (
@@ -451,114 +489,212 @@ export default function NewsPanel({
           </span>
           <div className="news-panel__title-text">
             {title}
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" >
               <path d="M7 4l5 5-5 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
         </Link>
 
-        {/* Category pill tabs (main panel) — OR — Sort pills (standalone panels) */}
-        <div className="news-panel__tabs" role="tablist" aria-label={showCategoryTabs ? 'News categories' : 'Sort'}>
-          {!showCategoryTabs ? (
-            // Standalone panels: Top | Latest | Trending 3 sort pills
+        {/* ── Tablet (≤980px): ... button only ── */}
+        {useTabsMoreBtn ? (
+          <div className="news-panel__tabs news-panel__tabs--more-only">
+            <button
+              ref={moreTabBtnRef}
+              type="button"
+              className={`news-panel__tab news-panel__tab--more${dropdownOpen ? ' news-panel__tab--active' : ''}`}
+              aria-expanded={dropdownOpen}
+              aria-label="More categories"
+              onClick={() => setDropdownOpen(o => !o)}
+            >
+              •••
+            </button>
+          </div>
+        ) : (
+          /* Desktop: full tab bar */
+          <div className="news-panel__tabs" role="tablist" aria-label={showCategoryTabs ? 'News categories' : 'Sort'}>
+            {!showCategoryTabs ? (
+              DROPDOWN_ITEMS.map(item => (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeSort === item.id}
+                  className={`news-panel__tab${activeSort === item.id ? ' news-panel__tab--active' : ''}`}
+                  onClick={() => { setActiveSort(item.id); setCurrentPage(1) }}
+                >
+                  {item.shortLabel}
+                </button>
+              ))
+            ) : (
+              TABS.map((tab) => (
+                tab.dropdown ? (
+                  <button
+                    key={tab.id}
+                    ref={topNewsBtnRef}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeTab === tab.id}
+                    aria-expanded={dropdownOpen}
+                    className={`news-panel__tab${activeTab === tab.id ? ' news-panel__tab--active' : ''}`}
+                    onClick={() => {
+                      if (activeTab !== tab.id) { setCurrentPage(1) }
+                      setActiveTab(tab.id)
+                      setDropdownOpen(o => !o)
+                    }}
+                  >
+                    {DROPDOWN_ITEMS.find(d => d.id === activeSort)?.label ?? tab.label}
+                    <svg
+                      width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"
+                      style={{ transform: dropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
+                    >
+                      <path d="M4 7l5 5 5-5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeTab === tab.id}
+                    className={`news-panel__tab${activeTab === tab.id ? ' news-panel__tab--active' : ''}`}
+                    onClick={() => {
+                      setActiveTab(tab.id)
+                      setCurrentPage(1)
+                      setDropdownOpen(false)
+                    }}
+                  >
+                    {tab.label}
+                  </button>
+                )
+              ))
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* ── Dropdown ── */}
+      {dropdownOpen && (
+        <div className="news-panel__dropdown" role="menu" ref={dropdownRef} style={dropdownPos}>
+          {useTabsMoreBtn && !showCategoryTabs ? (
+            // 태블릿 + 하위 패널: sort 옵션 (Top/Latest/Trending)
             DROPDOWN_ITEMS.map(item => (
               <button
                 key={item.id}
                 type="button"
-                role="tab"
-                aria-selected={activeSort === item.id}
-                className={`news-panel__tab${activeSort === item.id ? ' news-panel__tab--active' : ''}`}
-                onClick={() => { setActiveSort(item.id); setCurrentPage(1) }}
+                role="menuitem"
+                className={`news-panel__dropdown-item${activeSort === item.id ? ' news-panel__dropdown-item--active' : ''}`}
+                onClick={() => {
+                  setActiveSort(item.id)
+                  setDropdownOpen(false)
+                  setCurrentPage(1)
+                }}
               >
-                {item.shortLabel}
+                <span className="news-panel__dropdown-label">{item.label}</span>
+                {activeSort === item.id && (
+                  <svg aria-hidden="true" className="news-panel__dropdown-check" width="16" height="16" viewBox="0 0 16 16" fill="none" >
+                    <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
+              </button>
+            ))
+          ) : useTabsMoreBtn && showCategoryTabs ? (
+            // 태블릿 + 메인 패널: 카테고리 목록
+            TABS.map(tab => (
+              <button
+                key={tab.id}
+                type="button"
+                role="menuitem"
+                className={`news-panel__dropdown-item${activeTab === tab.id ? ' news-panel__dropdown-item--active' : ''}`}
+                onClick={() => {
+                  setActiveTab(tab.id)
+                  setDropdownOpen(false)
+                  setCurrentPage(1)
+                }}
+              >
+                <span className="news-panel__dropdown-label">{tab.label}</span>
+                {activeTab === tab.id && (
+                  <svg aria-hidden="true" className="news-panel__dropdown-check" width="16" height="16" viewBox="0 0 16 16" fill="none" >
+                    <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
               </button>
             ))
           ) : (
-            TABS.map((tab) => (
-            tab.dropdown ? (
+            // 데스크탑: Top News sort 옵션 (아이콘 포함)
+            DROPDOWN_ITEMS.map(item => (
               <button
-                key={tab.id}
-                ref={topNewsBtnRef}
+                key={item.id}
                 type="button"
-                role="tab"
-                aria-selected={activeTab === tab.id}
-                aria-expanded={dropdownOpen}
-                className={`news-panel__tab${activeTab === tab.id ? ' news-panel__tab--active' : ''}`}
+                role="menuitem"
+                className={`news-panel__dropdown-item${activeSort === item.id ? ' news-panel__dropdown-item--active' : ''}`}
                 onClick={() => {
-                  if (activeTab !== tab.id) { setCurrentPage(1) }
-                  setActiveTab(tab.id)
-                  setDropdownOpen(o => !o)
-                }}
-              >
-                {DROPDOWN_ITEMS.find(d => d.id === activeSort)?.label ?? tab.label}
-                <svg
-                  width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"
-                  style={{ transform: dropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
-                >
-                  <path d="M4 7l5 5 5-5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-            ) : (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={activeTab === tab.id}
-                className={`news-panel__tab${activeTab === tab.id ? ' news-panel__tab--active' : ''}`}
-                onClick={() => {
-                  setActiveTab(tab.id)
-                  setCurrentPage(1)
+                  setActiveSort(item.id)
                   setDropdownOpen(false)
+                  setCurrentPage(1)
                 }}
               >
-                {tab.label}
+                <span className="news-panel__dropdown-icon">{item.icon}</span>
+                <span className="news-panel__dropdown-label">{item.label}</span>
+                {activeSort === item.id && (
+                  <svg aria-hidden="true" className="news-panel__dropdown-check" width="16" height="16" viewBox="0 0 16 16" fill="none" >
+                    <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
               </button>
-            )
-          ))
+            ))
           )}
-        </div>
-      </div>
-
-      {/* ── Top News dropdown ── */}
-      {dropdownOpen && (
-        <div className="news-panel__dropdown" role="menu" ref={dropdownRef} style={{ left: dropdownLeft }}>
-          {DROPDOWN_ITEMS.map(item => (
-            <button
-              key={item.id}
-              type="button"
-              role="menuitem"
-              className={`news-panel__dropdown-item${activeSort === item.id ? ' news-panel__dropdown-item--active' : ''}`}
-              onClick={() => {
-                setActiveSort(item.id)
-                setDropdownOpen(false)
-                setCurrentPage(1)
-              }}
-            >
-              <span className="news-panel__dropdown-icon">{item.icon}</span>
-              <span className="news-panel__dropdown-label">{item.label}</span>
-              {activeSort === item.id && (
-                <svg className="news-panel__dropdown-check" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              )}
-            </button>
-          ))}
         </div>
       )}
 
       {/* ── Body ── */}
-      {effectiveVariant === 'sports' ? (
+      {useTabsMoreBtn ? (
+
+        /* 소형 태블릿: 모든 variant → default (grid + list) 레이아웃 */
+        <div className="news-panel__body">
+          <div className="news-panel__grid">
+            {displayGrid.map((article) => (
+              <Link key={article.id} href={article.href} className="news-panel__card">
+                <div className="news-panel__thumb-wrap">
+                  <Image
+                    className="news-panel__thumb"
+                    src={article.image}
+                    alt={article.title}
+                    fill
+                    sizes="(max-width: 671px) 42vw, (max-width: 980px) 30vw, 167px"
+                    style={{ objectFit: 'cover' }}
+                  />
+                </div>
+                <div className="news-panel__card-info">
+                  <p className="news-panel__card-title">{article.title}</p>
+                  <span className="news-panel__card-source">{article.source}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <ul className="news-panel__list">
+            {displayList.map((article) => (
+              <li key={article.id} className="news-panel__list-item">
+                {article.breaking && <span className="news-panel__badge">Breaking</span>}
+                <Link href={article.href} className="news-panel__list-link">{article.title}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+      ) : effectiveVariant === 'sports' ? (
 
         <div className="news-panel__body news-panel__body--sports">
 
           {/* Left: featured image + 4 text list */}
           <div className="news-panel__featured-col">
             <Link href={displaySportsFeatured.href} className="news-panel__featured">
-              <img
+              <Image
                 className="news-panel__featured-img"
                 src={displaySportsFeatured.image}
                 alt={displaySportsFeatured.title}
-                loading="lazy"
+                fill
+                sizes="(max-width: 671px) 90vw, (max-width: 980px) 50vw, 350px"
+                style={{ objectFit: 'cover' }}
               />
               <div className="news-panel__featured-overlay">
                 <p className="news-panel__featured-title">{displaySportsFeatured.title}</p>
@@ -585,11 +721,14 @@ export default function NewsPanel({
                     <p className="news-panel__list-thumb-title">{article.title}</p>
                     <span className="news-panel__list-thumb-source">{article.source}</span>
                   </div>
-                  <img
+                  <Image
                     className="news-panel__list-thumb-img"
                     src={article.image}
-                    alt=""
-                    loading="lazy"
+                    alt={article.title}
+                    width={133}
+                    height={77}
+                    sizes="(max-width: 671px) 30vw, 133px"
+                    style={{ objectFit: 'cover' }}
                   />
                 </Link>
               </li>
@@ -608,7 +747,15 @@ export default function NewsPanel({
                   <p className="news-panel__list-thumb-title">{article.title}</p>
                   <span className="news-panel__list-thumb-source">{article.source}</span>
                 </div>
-                <img className="news-panel__list-thumb-img" src={article.image} alt="" loading="lazy" />
+                <Image
+                  className="news-panel__list-thumb-img"
+                  src={article.image}
+                  alt=""
+                  width={133}
+                  height={77}
+                  sizes="(max-width: 671px) 30vw, 133px"
+                  style={{ objectFit: 'cover' }}
+                />
               </Link>
             </div>
           ))}
@@ -624,7 +771,15 @@ export default function NewsPanel({
                   <p className="news-panel__list-thumb-title">{article.title}</p>
                   <span className="news-panel__list-thumb-source">{article.source}</span>
                 </div>
-                <img className="news-panel__list-thumb-img" src={article.image} alt="" loading="lazy" />
+                <Image
+                  className="news-panel__list-thumb-img"
+                  src={article.image}
+                  alt=""
+                  width={133}
+                  height={77}
+                  sizes="(max-width: 671px) 30vw, 133px"
+                  style={{ objectFit: 'cover' }}
+                />
               </Link>
             </div>
           ))}
@@ -640,7 +795,15 @@ export default function NewsPanel({
                   <p className="news-panel__list-thumb-title">{article.title}</p>
                   <span className="news-panel__list-thumb-source">{article.source}</span>
                 </div>
-                <img className="news-panel__list-thumb-img" src={article.image} alt="" loading="lazy" />
+                <Image
+                  className="news-panel__list-thumb-img"
+                  src={article.image}
+                  alt=""
+                  width={133}
+                  height={77}
+                  sizes="(max-width: 671px) 30vw, 133px"
+                  style={{ objectFit: 'cover' }}
+                />
               </Link>
             </div>
           ))}
@@ -653,11 +816,13 @@ export default function NewsPanel({
             {displayCommunityPaged.map((article) => (
               <Link key={article.id} href={article.href} className="news-panel__card">
                 <div className="news-panel__thumb-wrap">
-                  <img
+                  <Image
                     className="news-panel__thumb"
                     src={article.image}
                     alt={article.title}
-                    loading="lazy"
+                    fill
+                    sizes="(max-width: 671px) 42vw, (max-width: 980px) 30vw, 167px"
+                    style={{ objectFit: 'cover' }}
                   />
                 </div>
                 <div className="news-panel__card-info">
@@ -679,11 +844,13 @@ export default function NewsPanel({
             {displayGrid.map((article) => (
               <Link key={article.id} href={article.href} className="news-panel__card">
                 <div className="news-panel__thumb-wrap">
-                  <img
+                  <Image
                     className="news-panel__thumb"
                     src={article.image}
                     alt={article.title}
-                    loading="lazy"
+                    fill
+                    sizes="(max-width: 671px) 42vw, (max-width: 980px) 30vw, 167px"
+                    style={{ objectFit: 'cover' }}
                   />
                 </div>
                 <div className="news-panel__card-info">
@@ -721,7 +888,7 @@ export default function NewsPanel({
           disabled={currentPage === 1}
           onClick={() => goPage(currentPage - 1)}
         >
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" >
             <path d="M11 4L6 9l5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
@@ -738,7 +905,7 @@ export default function NewsPanel({
           disabled={currentPage === totalPages}
           onClick={() => goPage(currentPage + 1)}
         >
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" >
             <path d="M7 4l5 5-5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>

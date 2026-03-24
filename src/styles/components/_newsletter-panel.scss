@@ -1,0 +1,147 @@
+// ============================================
+//  NewsletterPanel — sidebar: email subscribe CTA
+// ============================================
+
+.newsletter-panel {
+  &.panel {
+    padding: 20px 24px;
+
+    @media (min-width: 672px) and (max-width: 980px) {
+      padding: 16px;
+    }
+
+    @media (max-width: 671px) {
+      border-radius: 0;
+      padding: 16px 10px;
+    }
+  }
+
+  // ── Header ───────────────────────────────
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: block;
+  }
+
+  &__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__title {
+    font-size: 16px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    line-height: 1.3;
+  }
+
+  &__subtitle {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    line-height: 1.3;
+  }
+
+  // ── Form ─────────────────────────────────
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__input {
+    width: 100%;
+    height: 42px;
+    padding: 0 14px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    font-size: 14px;
+    outline: none;
+    transition: border-color var(--transition-fast);
+    box-sizing: border-box;
+
+    &::placeholder {
+      color: var(--color-text-tertiary);
+    }
+
+    &:focus {
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    [data-theme='light'] & {
+      background: #f5f6f8;
+      border-color: rgba(0, 0, 0, 0.1);
+
+      &:focus {
+        border-color: rgba(0, 0, 0, 0.25);
+      }
+    }
+  }
+
+  &__btn {
+    width: 100%;
+    height: 42px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--color-site-primary);
+    color: var(--color-site-primary-text);
+    font-size: 14px;
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+
+    &:hover {
+      background: var(--color-site-primary-hover);
+    }
+  }
+
+  // ── Success state ─────────────────────────
+  &__success {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    background: rgba(74, 171, 247, 0.12);
+    color: #4aabf7;
+    font-size: 14px;
+    font-weight: var(--font-weight-medium);
+
+    [data-theme='light'] & {
+      background: rgba(74, 171, 247, 0.1);
+    }
+  }
+
+  // ── Note ─────────────────────────────────
+  &__note {
+    margin: 10px 0 0;
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  // ── Responsive visibility ─────────────────
+  &--mobile {
+    @media (min-width: 672px) {
+      display: none;
+    }
+  }
+
+  &--desktop {
+    @media (max-width: 671px) {
+      display: none;
+    }
+  }
+}

@@ -111,9 +111,18 @@ export async function fetchNowPlaying(
 
 /** RDS HTML → NowPlaying */
 function parseRdsHtml(html: string, channelId: string): NowPlaying {
-  // HTML 태그 제거 → 순수 텍스트
+  // <style>…</style>, <script>…</script> 블록 제거 → 나머지 태그 제거 → 엔티티 디코딩
   const text = html
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
     .replace(/<[^>]+>/g, '')
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/\{[^}]*\}/g, '')
     .replace(/\s+/g, ' ')
     .trim();
 

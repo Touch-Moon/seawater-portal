@@ -48,7 +48,7 @@ export default function LivePanel() {
 
               {/* Play overlay — red, shows on hover */}
               <span className="live-panel__play" aria-hidden="true">
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                <svg aria-hidden="true" width="40" height="40" viewBox="0 0 40 40" fill="none">
                   <circle cx="20" cy="20" r="20" fill="rgba(0,0,0,0.45)" />
                   <path d="M17 13l12 7-12 7V13z" fill="#ff2d2d" />
                 </svg>
@@ -56,7 +56,7 @@ export default function LivePanel() {
 
               {/* LIVE / Play badge — bottom left */}
               <span className="live-panel__live">
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                <svg aria-hidden="true" width="10" height="10" viewBox="0 0 10 10" fill="none" >
                   <path d="M3 2l7 3.5L3 9V2z" fill="currentColor" />
                 </svg>
                 Play

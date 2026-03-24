@@ -1,7 +1,14 @@
 // ============================================
 //  Home page 2-column grid layout
 //
-//  Tablet  (672–1199px):
+//  Small Tablet (672–980px):
+//    padding              → 0 10px
+//    left  .home__main    → 1fr (fluid, min ~336px)
+//    gap                  → 16px
+//    right .home__sidebar → 300px
+//
+//  Large Tablet (981–1199px):
+//    padding              → 0 24px
 //    left  .home__main    → 1fr (fluid)
 //    gap                  → 16px
 //    right .home__sidebar → 300px
@@ -15,24 +22,35 @@
 //  Mobile (< 672px): single column stack
 // ============================================
 
-$home-sticky-top: 40px;
+// sticky top 값은 SmartStickyCol(useSmartSticky)이 JS로 동적 계산
+// → header.offsetHeight + quickMenuVisibleH + 16px gap
 
 .home {
   background: var(--color-bg-primary);
   padding: 8px 0 40px;
 
+  @media (max-width: 671px) {
+    padding-bottom: 0;
+  }
+
   &__inner {
     max-width: var(--max-width); // 1168px
     margin: 0 auto;
-    padding: 0 16px;
+    padding: 0;
 
-    // Tablet+: 2-column grid
+    // Small Tablet: 2-column grid, narrow padding, 300px sidebar
     @media (min-width: 672px) {
-      padding: 0 24px;
+      padding: 0 14px;
       display: grid;
       grid-template-columns: 1fr 300px;
       grid-template-areas: 'main sidebar';
       gap: 16px;
+      align-items: start;
+    }
+
+    // Large Tablet: same narrow padding
+    @media (min-width: 981px) {
+      padding: 0 10px;
     }
 
     // Desktop: fixed column sizes, no padding (grid fills max-width)
@@ -49,27 +67,39 @@ $home-sticky-top: 40px;
     flex-direction: column;
     gap: 16px;
     min-width: 0;
-    position: sticky;
-    top: $home-sticky-top;
-    bottom: $home-sticky-top;
-    align-self: flex-start;
+
+    // Mobile: 패널 border-radius 제거
+    @media (max-width: 671px) {
+      > * {
+        border-radius: 0 !important;
+      }
+    }
+
+    @media (max-width: 879px) {
+      gap: 8px;
+    }
   }
 
   // ── Right column — sidebar ──
+  // position:sticky + top 은 SmartStickyCol(JS)이 동적으로 적용 — CSS에서 제거
   &__sidebar {
     grid-area: sidebar;
     display: flex;
     flex-direction: column;
     gap: 16px;
     min-width: 0;
-    position: sticky;
-    top: $home-sticky-top;
-    bottom: $home-sticky-top;
-    align-self: flex-start;
 
-    // Mobile only: sidebar stacks below main
+    // Mobile only: sidebar stacks below main, 패널 border-radius 제거
     @media (max-width: 671px) {
       margin-top: 16px;
+
+      > * {
+        border-radius: 0 !important;
+      }
+    }
+
+    @media (max-width: 879px) {
+      gap: 8px;
     }
   }
 }

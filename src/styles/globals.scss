@@ -13,6 +13,21 @@
 @use 'layout/navigation';
 @use 'layout/home';
 @use 'layout/footer';
+@use 'layout/list-page';
+@use 'layout/detail-page';
+@use 'layout/weather-page';
+@use 'layout/radar-page';
+@use 'layout/events-list';
+@use 'layout/event-detail';
+@use 'layout/listen';
+@use 'layout/directory';
+@use 'layout/classifieds';
+@use 'layout/classified-detail';
+@use 'layout/static-page';
+@use 'layout/search-results';
+@use 'layout/not-found';
+@use 'layout/auth';
+@use 'layout/account';
 
 // 4. Shared components
 @use 'components/search-bar';
@@ -32,15 +47,25 @@
 @use 'components/weather-widget';
 @use 'components/events-panel';
 @use 'components/jobs-panel';
+@use 'components/directory-preview';
+@use 'components/newsletter-panel';
 @use 'components/classifieds-preview';
 @use 'components/sitemap';
 @use 'components/side-panel';
+@use 'components/skeleton';
+@use 'components/page-header';
+@use 'components/funeral-card';
 
 // ── Panel base — 카드 공통 스타일 ──
 .panel {
-  padding: 24px;
+  padding: 16px 24px 24px;
   background: var(--color-surface-primary);
   border-radius: var(--radius-xl);
+
+  // 소형 태블릿: 상단 8px, 좌우·하단 16px
+  @media (min-width: 672px) and (max-width: 980px) {
+    padding: 8px 16px 16px;
+  }
 
   [data-theme='light'] & {
     background: #ffffff;
@@ -104,6 +129,18 @@
   }
 }
 
+// ── Text Size (zoom) ──────────────────────────────────────────
+// data-text-size 속성을 html에 설정해 전체 페이지 배율 조정 (Daum 방식)
+:root[data-text-size='large'] body   { zoom: 1.1; }
+:root[data-text-size='larger'] body  { zoom: 1.2; }
+
+// fixed 요소는 body zoom에 의해 함께 스케일되므로 역보정
+// side-panel, settings-panel 등 fixed UI는 항상 원래 크기 유지
+:root[data-text-size='large'] .side-panel   { zoom: 0.9091; } // 1 / 1.1
+:root[data-text-size='larger'] .side-panel  { zoom: 0.8333; } // 1 / 1.2
+:root[data-text-size='large'] .font-modal__backdrop  { zoom: 0.9091; }
+:root[data-text-size='larger'] .font-modal__backdrop { zoom: 0.8333; }
+
 // ── Page utilities ──
 
 .page {
@@ -114,7 +151,11 @@
 .page__hero {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0;
+  padding: 24px 10px 0 10px;
+
+  @media (min-width: 672px) {
+    padding-right: 0;
+  }
 
   // Flex row: spacer + SearchBar + action buttons
   // Left spacer balances right actions so SearchBar stays centered
@@ -127,27 +168,55 @@
     .search-bar__section {
       flex: 1;
       min-width: 0;
+      padding: 0;
+      justify-content: flex-start;
+
+      .search-bar__wrapper {
+        max-width: 100%;
+        width: 100%;
+      }
     }
 
-    // Left spacer mirrors actions width for centering
-    &::before {
-      content: '';
-      flex-shrink: 0;
-      width: 96px; // 2 × 48px action buttons
+    // Desktop: spacer to center SearchBar
+    @media (min-width: 1200px) {
+      // Left spacer mirrors actions width for centering
+      &::before {
+        content: '';
+        flex-shrink: 0;
+        width: 96px; // must match __actions width
+      }
+
+      .search-bar__section {
+        justify-content: center;
+
+        .search-bar__wrapper {
+          max-width: 600px;
+          width: 100%;
+        }
+      }
     }
   }
 
   &__actions {
-    display: flex;
+    display: none;
     align-items: center;
+    justify-content: flex-end;
     gap: 0;
     flex-shrink: 0;
-    width: 96px; // 2 × 48px — must match ::before width
+    width: 48px; // 1 button
     height: 56px; // match search-bar__wrapper height
+
+    @media (min-width: 672px) {
+      display: flex;
+    }
+
+    @media (min-width: 1200px) {
+      width: 96px; // must match ::before width for centering
+    }
   }
 
   &__action-btn {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     width: 48px;
@@ -158,6 +227,10 @@
     color: #c1c1c1;
     border-radius: var(--radius-md);
     transition: color var(--transition-fast), background var(--transition-fast);
+
+    @media (min-width: 672px) {
+      display: flex;
+    }
 
     &:hover {
       color: #ffffff;
@@ -175,4 +248,5 @@
       }
     }
   }
+
 }

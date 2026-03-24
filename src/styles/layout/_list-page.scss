@@ -1,0 +1,961 @@
+// ============================================
+//  ListPageLayout — list page shell
+//  Used by: /news, /events, /directory, /classifieds
+//
+//  Structure:
+//    .list-page
+//      .list-page__head      ← sticky header (logo + actions)
+//      .list-page__body
+//        .list-page__inner
+//          .list-page__main  ← content column
+//          .list-page__sidebar
+// ============================================
+
+.list-page {
+  min-height: 100vh;
+  background: var(--color-bg-primary);
+
+  // ── Sticky header ──────────────────────────────────────────────
+  &__head {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    width: 100%;
+    height: 52px;
+    background: rgba(19, 20, 22, 0.82);
+    backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--color-divider);
+    display: flex;
+    align-items: center;
+
+    [data-theme='light'] & {
+      background: rgba(255, 255, 255, 0.82);
+    }
+
+    @media (min-width: 672px) {
+      height: 60px;
+    }
+  }
+
+  &__head-inner {
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 12px 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    @media (min-width: 672px) {
+      padding: 0 8px 0 24px;
+    }
+
+    @media (min-width: 1200px) {
+      padding: 0 0 0 0;
+    }
+  }
+
+  // ── Logo (left) ────────────────────────────────────────────────
+  &__logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  &__logo-brand {
+    display: block;
+    width: auto;
+    height: 32px;
+    flex-shrink: 0;
+
+    &--dark {
+      display: block;
+
+      [data-theme='light'] & {
+        display: none;
+      }
+    }
+
+    &--light {
+      display: none;
+
+      [data-theme='light'] & {
+        display: block;
+      }
+    }
+  }
+
+  // ── Right action buttons ───────────────────────────────────────
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  // Subscribe button (pill)
+  &__subscribe-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: var(--radius-full);
+    background: var(--color-site-primary);
+    color: var(--color-site-primary-text);
+    font-size: 13px;
+    font-weight: var(--font-weight-bold);
+    text-decoration: none;
+    white-space: nowrap;
+    border: none;
+    cursor: pointer;
+    letter-spacing: -0.01em;
+
+    // '+' icon
+    &::before {
+      content: '+';
+      font-size: 16px;
+      font-weight: var(--font-weight-bold);
+      line-height: 1;
+      margin-right: 1px;
+    }
+
+    &:hover,
+    &:focus,
+    &:visited {
+      color: var(--color-site-primary-text);
+    }
+
+    @media (min-width: 672px) {
+      height: 38px;
+      padding: 0 16px;
+      font-size: 14px;
+    }
+  }
+
+  // Icon buttons (share, search)
+  &__icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    border-radius: var(--radius-md);
+    transition: color var(--transition-fast), background var(--transition-fast);
+
+    &:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-tertiary);
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
+
+  // ── Hide on mobile ──
+  &__hide-mobile {
+    @media (max-width: 671px) {
+      display: none !important;
+    }
+  }
+
+  // ── Search overlay (rendered outside __head to escape stacking context) ──
+  &__search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 52px; // match __head height
+    z-index: 210;
+    display: flex;
+    align-items: center;
+
+    @media (min-width: 672px) {
+      height: 60px;
+    }
+  }
+
+  // __head-inner와 동일한 max-width wrapper — submit 버튼 위치 기준점
+  &__search-outer {
+    width: 100%;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 12px;
+    display: flex;
+    justify-content: flex-end;
+
+    @media (min-width: 672px) {
+      padding: 0 8px;
+    }
+
+    @media (min-width: 1200px) {
+      padding: 0;
+    }
+  }
+
+  // 320px 검색 박스 — submit 버튼이 search icon-btn과 동일 위치
+  &__search-inner {
+    width: 320px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background-color: #1c1e21;
+    border-radius: var(--radius-lg);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+
+    [data-theme='light'] & {
+      background-color: #f2f4f7;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+    }
+
+  }
+
+  &__search-input {
+    flex: 1;
+    height: 44px;
+    padding: 0 16px;
+    background: transparent;
+    border: none;
+    color: var(--color-text-primary);
+    font-size: 16px;
+    font-weight: var(--font-weight-medium);
+    outline: none;
+    caret-color: var(--color-site-primary);
+    appearance: none;
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+
+    &::placeholder {
+      color: var(--color-text-tertiary);
+      font-weight: var(--font-weight-regular);
+    }
+  }
+
+  &__search-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    flex-shrink: 0;
+    border-radius: var(--radius-md);
+    transition: color var(--transition-fast), background var(--transition-fast);
+
+    &:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-tertiary);
+    }
+  }
+
+  &__search-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 205;
+  }
+
+  // ── QuickMenu bar override (list-page 전용) ────────────────────
+  .quick-menu__bar {
+    padding: 8px 30px;
+    padding-right: 64px;
+    background-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+
+    [data-theme='light'] & {
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
+
+  .quick-menu__label {
+    padding-top: 8px;
+    padding-bottom: 15px;
+
+    &::after {
+      bottom: 0;
+
+      [data-theme='light'] & {
+        background-color: var(--color-text-primary);
+      }
+    }
+  }
+
+  .quick-menu__item {
+    height: auto;
+  }
+
+  .news-ad-banner {
+    background: #1c1e21;
+    box-shadow: none;
+
+    [data-theme='light'] & {
+      background: #ffffff;
+      box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 0px;
+    }
+  }
+
+  // ── Body (content + sidebar) ───────────────────────────────────
+  &__body {
+    padding: 16px 0 40px;
+
+    @media (min-width: 672px) {
+      padding: 20px 0 48px;
+    }
+  }
+
+  &__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0;
+
+    @media (min-width: 672px) {
+      padding: 0 14px;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      grid-template-areas: 'main sidebar';
+      gap: 16px;
+      align-items: start;
+    }
+
+    @media (min-width: 981px) {
+      padding: 0 10px;
+    }
+
+    @media (min-width: 1200px) {
+      padding: 0;
+      grid-template-columns: 768px 384px;
+    }
+  }
+
+  // ── Main content column ────────────────────────────────────────
+  &__main {
+    grid-area: main;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  // ── Sidebar column ─────────────────────────────────────────────
+  &__sidebar {
+    grid-area: sidebar;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    // 사이드바 패널 배경색 통일
+    > * {
+      background: #1c1e21 !important;
+      box-shadow: none !important;
+
+      [data-theme='light'] & {
+        background: #ffffff !important;
+        box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 0px !important;
+      }
+    }
+
+    // Mobile: sidebar stacks below main
+    @media (max-width: 671px) {
+      display: none; // 모바일에서는 사이드바 숨김
+    }
+  }
+
+  // ── Mobile sidebar (detail page: main 하단에 표시) ──
+  &__mobile-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    > * {
+      background: #1c1e21 !important;
+      box-shadow: none !important;
+
+      [data-theme='light'] & {
+        background: #ffffff !important;
+        box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 0px !important;
+      }
+    }
+
+    // 태블릿+: 데스크탑 사이드바가 보이므로 숨김
+    @media (min-width: 672px) {
+      display: none;
+    }
+  }
+}
+
+// ── News list wrapper ──────────────────────────────────────────────
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 24px 30px;
+  background-color: var(--color-surface-primary);
+  border-radius: 12px;
+  overflow: hidden;
+
+  [data-theme='light'] & {
+    background-color: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 0px;
+  }
+
+  // 소형 태블릿 (672~980px) — news-panel 동일
+  @media (min-width: 672px) and (max-width: 980px) {
+    padding: 8px 16px 16px;
+  }
+
+  // 모바일 (≤671px) — news-panel 동일
+  @media (max-width: 671px) {
+    gap: 0;
+    padding: 8px 10px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  // ── Title wrap ──
+  &__title-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    max-width: 100%;
+    min-height: 58px;
+  }
+
+  // ── Title ──
+  &__title {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-top: -1px;
+    padding: 5px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  // ── Empty state ──
+  &__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+  }
+
+  &__empty-text {
+    font-size: 15px;
+    color: var(--color-text-tertiary);
+  }
+
+  // 2-column grid for remaining articles
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 30px;
+
+    // grid 아이템 overflow 방지
+    > * { min-width: 0; }
+
+    @media (max-width: 671px) {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    // 대형 태블릿+(981px+): 2col 전체 표시 / 그 이하: 숨김
+    &--desktop {
+      @media (max-width: 980px) {
+        display: none;
+      }
+
+      // 홀수 마지막 아이템: 전체 너비로 늘어나지 않도록 제한
+      > *:last-child:nth-child(odd) {
+        max-width: calc(50% - 15px);
+      }
+    }
+
+  }
+
+  // ~소형 태블릿 list 섹션 (대형 태블릿+에서 숨김)
+  // news-panel__list 와 동일한 디자인 규칙 사용
+  &__mobile-list {
+    margin-top: 12px;
+
+    @media (min-width: 981px) {
+      display: none !important;
+    }
+  }
+
+  // ── Refresh button ──
+  &__refresh-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    align-self: center;
+    margin-top: 20px;
+    height: 40px;
+    padding: 0 20px;
+    border-radius: var(--radius-full);
+    background: var(--color-surface-secondary);
+    border: 1px solid var(--color-divider);
+    color: var(--color-text-primary);
+    font-size: 14px;
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+
+    span {
+      color: var(--color-site-primary);
+      font-weight: var(--font-weight-bold);
+    }
+
+    svg {
+      flex-shrink: 0;
+      color: var(--color-text-secondary);
+    }
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+// ── News card — shared base ────────────────────────────────────────
+.news-card {
+  display: flex;
+  text-decoration: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  background: transparent;
+  transition: background var(--transition-fast);
+
+  &:visited,
+  &:hover {
+    color: var(--color-text-primary);
+  }
+
+  &:hover {
+    background: var(--color-surface-secondary);
+  }
+
+  [data-theme='light'] & {
+    &:hover {
+      background: var(--color-surface-tertiary);
+    }
+  }
+
+  // ── Featured variant ── (첫 번째 기사, 큰 이미지 좌 + 텍스트 우)
+  &--featured {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 30px;
+    overflow: hidden;
+    margin-bottom: 2px;
+    background: transparent;
+
+    // ~소형 태블릿(~980px)에서 숨김 — grid--mobile이 대신 표시
+    @media (max-width: 980px) {
+      display: none;
+    }
+
+    &:hover {
+      background: transparent;
+    }
+
+    &:hover .news-card__thumb--featured img {
+      transform: scale(1.1);
+    }
+
+    [data-theme='light'] & {
+      background: transparent;
+      box-shadow: none;
+
+      &:hover {
+        background: transparent;
+      }
+    }
+  }
+
+  // ── Grid variant ── (나머지 기사, 작은 썸네일 좌 + 텍스트 우)
+  &--grid {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-radius: var(--radius-xl);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+
+    [data-theme='light'] & {
+      border-top-color: rgba(0, 0, 0, 0.06);
+    }
+
+    .news-list__grid &:nth-child(-n+2) {
+      border-top: none;
+    }
+
+    &:hover {
+      background: transparent;
+    }
+
+    &:hover .news-card__thumb--grid img {
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 671px) {
+      border-radius: 0;
+      border-bottom: 1px solid var(--color-divider);
+      padding: 0;
+    }
+  }
+
+  // ── Thumbnail — featured ──
+  &__thumb--featured {
+    position: relative;
+    flex-shrink: 0;
+    width: 48%;
+    aspect-ratio: 14 / 9;
+    border-radius: 8px;
+    background: var(--color-surface-tertiary);
+    overflow: hidden;
+
+    img {
+      transition: transform 0.3s ease;
+    }
+
+    @media (max-width: 671px) {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 0;
+    }
+  }
+
+  // ── Thumbnail — grid ──
+  &__thumb--grid {
+    position: relative;
+    flex-shrink: 0;
+    width: 112px;
+    height: 72px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-tertiary);
+    overflow: hidden;
+
+    img {
+      transition: transform 0.3s ease;
+    }
+
+    @media (max-width: 671px) {
+      width: 88px;
+      height: 60px;
+    }
+  }
+
+  // shared ::after border overlay for thumbnails
+  &__thumb--featured,
+  &__thumb--grid {
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: inherit;
+      pointer-events: none;
+
+      [data-theme='light'] & {
+        border-color: rgba(0, 0, 0, 0.08);
+      }
+    }
+  }
+
+  &__thumb-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-surface-secondary), var(--color-surface-tertiary));
+  }
+
+  // ── Body — featured ──
+  &__body--featured {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 20px 0;
+    justify-content: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+
+    [data-theme='light'] & {
+      border-top-color: rgba(0, 0, 0, 0.06);
+      border-bottom-color: rgba(0, 0, 0, 0.06);
+    }
+
+    @media (max-width: 671px) {
+      padding: 14px 16px;
+      gap: 0;
+      border-top: none;
+      border-bottom: none;
+    }
+  }
+
+  // ── Body — grid ──
+  &__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  // ── Title — featured ──
+  &__title--featured {
+    font-size: 18px;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.35;
+    color: var(--color-text-primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+    letter-spacing: -0.02em;
+
+    @media (max-width: 671px) {
+      font-size: 17px;
+      -webkit-line-clamp: 3;
+    }
+  }
+
+  // ── Title — grid ──
+  &__title {
+    font-size: 18px;
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.45;
+    color: var(--color-text-primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+  }
+
+  // ── Summary (featured only) ──
+  &__summary {
+    font-size: 16px;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    padding-top: 12px;
+
+    @media (max-width: 671px) {
+      display: none;
+    }
+  }
+
+  // ── Meta row ──
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: nowrap;
+    min-width: 0;
+    overflow: hidden;
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  &__source {
+    font-size: 12px;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-tertiary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--color-text-tertiary);
+    flex-shrink: 0;
+  }
+
+  &__date {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    white-space: nowrap;
+  }
+
+  // ── Breaking badge ──
+  &__breaking {
+    display: inline-flex;
+    align-items: center;
+    height: 18px;
+    padding: 0 7px;
+    border-radius: var(--radius-full);
+    background: #e8192c;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  // ── List variant ── (Today's News 등 세로 리스트, 텍스트 좌 + 썸네일 우)
+  &--list {
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    text-decoration: none;
+    color: inherit;
+
+    [data-theme='light'] & {
+      border-bottom-color: rgba(0, 0, 0, 0.07);
+    }
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    &:hover {
+      background: transparent;
+    }
+
+    &:hover .news-card__thumb--list img {
+      transform: scale(1.1);
+    }
+  }
+
+  // ── Body — list ──
+  &__body--list {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  // ── Title — list ──
+  &__title--list {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // ── Description — list ──
+  &__desc--list {
+    font-size: 16px;
+    color: var(--color-text-secondary);
+    line-height: 1.38;
+    padding-top: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  // ── Source — list ──
+  &__source--list {
+    font-size: 14px;
+    color: var(--color-text-tertiary);
+    line-height: 1;
+    padding-top: 8px;
+  }
+
+  // ── Thumbnail — list ──
+  &__thumb--list {
+    flex-shrink: 0;
+    width: 164px;
+    height: 104px;
+    border-radius: var(--radius-md);
+    background: var(--color-bg-tertiary);
+    overflow: hidden;
+    position: relative;
+    display: block;
+
+    img {
+      transition: transform 0.3s ease;
+    }
+
+    @media (max-width: 671px) {
+      width: 120px;
+      height: 76px;
+    }
+  }
+}
+
+// ── Today's News panel ──────────────────────────────────────────────
+.today-news {
+  padding: 20px 24px 24px;
+  background-color: #1c1e21;
+  border-radius: 12px;
+
+  [data-theme='light'] & {
+    background-color: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 0px;
+  }
+
+  @media (max-width: 671px) {
+    padding: 8px 10px;
+    background-color: var(--color-surface-primary);
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  &__title-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    max-width: 100%;
+    min-height: 58px;
+  }
+
+  &__title {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-top: -1px;
+    padding: 5px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+}

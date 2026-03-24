@@ -1,0 +1,193 @@
+// ============================================
+//  Skeleton shimmer — loading placeholder
+//  GPU-only: background-position only, no reflow
+//
+//  Layout는 실제 페이지의 CSS 클래스를 그대로 사용하므로
+//  여기서는 shimmer 블록 + 내부 요소 크기만 정의
+// ============================================
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+// ── Shimmer base block ──
+.sk {
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-secondary) 25%,
+    var(--color-surface-tertiary) 50%,
+    var(--color-surface-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+
+  &--pill  { border-radius: var(--radius-full); }
+  &--round { border-radius: 50%; }
+  &--xl    { border-radius: var(--radius-xl); }
+}
+
+// ── Skeleton inner pieces ──
+// 실제 layout 클래스(.page__hero, .home, .panel 등)를 마크업에서 재사용하므로
+// 여기서는 skeleton 전용 내부 요소만 정의
+
+.sk-search {
+  height: 56px;
+  border-radius: var(--radius-full);
+}
+
+// Quick menu placeholder items
+.sk-quick {
+  display: flex;
+  gap: 12px;
+  overflow: hidden;
+  padding: 8px 16px;
+
+  @media (max-width: 672px) {
+    gap: 24px;
+  }
+
+  &__item {
+    flex-shrink: 0;
+    width: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-lg);
+  }
+
+  &__label {
+    width: 40px;
+    height: 10px;
+    border-radius: var(--radius-full);
+  }
+}
+
+// Panel skeleton internals
+.sk-panel {
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+  }
+
+  &__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-lg);
+    flex-shrink: 0;
+  }
+
+  &__title {
+    width: 120px;
+    height: 20px;
+    border-radius: var(--radius-full);
+  }
+}
+
+// Grid of card placeholders
+.sk-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-md);
+  }
+
+  &__line {
+    height: 14px;
+    border-radius: var(--radius-full);
+
+    &--short { width: 60%; height: 10px; }
+  }
+}
+
+// List row placeholders
+.sk-list {
+  display: flex;
+  flex-direction: column;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+
+    [data-theme='light'] & {
+      border-bottom-color: rgba(0, 0, 0, 0.04);
+    }
+
+    &:last-child { border-bottom: none; }
+  }
+
+  &__line {
+    flex: 1;
+    height: 14px;
+    border-radius: var(--radius-full);
+  }
+}
+
+// Banner placeholder
+.sk-banner {
+  height: 130px;
+  border-radius: var(--radius-xl);
+}
+
+// Sidebar card shell
+.sk-sidebar-card {
+  border-radius: var(--radius-xl);
+  background: var(--color-surface-primary);
+  padding: 20px 24px;
+
+  [data-theme='light'] & {
+    background: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 0px;
+  }
+}
+
+// Sidebar row (e.g. weather widget)
+.sk-sidebar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+
+  &__icon {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-lg);
+    flex-shrink: 0;
+  }
+
+  &__lines {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__line {
+    height: 12px;
+    border-radius: var(--radius-full);
+
+    &:first-child { width: 80%; }
+    &:last-child  { width: 50%; }
+  }
+}

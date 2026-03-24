@@ -77,20 +77,20 @@ const MOCK_JOBS: Job[] = [
 
 const INITIAL_COUNT = 5
 
-export default function JobsPanel() {
+export default function JobsPanel({ mobile, desktop }: { mobile?: boolean; desktop?: boolean } = {}) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const visibleJobs = isExpanded ? MOCK_JOBS : MOCK_JOBS.slice(0, INITIAL_COUNT)
 
   return (
-    <div className="jobs-panel panel">
+    <div className={`jobs-panel panel${mobile ? ' jobs-panel--mobile' : ''}${desktop ? ' jobs-panel--desktop' : ''}`}>
 
       {/* ── Header ── */}
       <div className="jobs-panel__header">
         <Link href="/jobs" className="jobs-panel__title-wrap">
           <div className="jobs-panel__title-link">
             Jobs
-            <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 18 18" fill="none" >
               <path d="M7 4l5 5-5 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
@@ -117,6 +117,7 @@ export default function JobsPanel() {
               {job.highlight && (
                 <span className="jobs-panel__badge" aria-label="Featured" />
               )}
+              <span className="sr-only">(opens in new tab)</span>
             </Link>
           </li>
         ))}

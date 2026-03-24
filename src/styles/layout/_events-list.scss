@@ -1,0 +1,222 @@
+// ============================================
+//  Events List Page — /events
+// ============================================
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--color-surface-primary);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+
+  @media (max-width: 671px) {
+    border-radius: 0;
+  }
+
+  [data-theme='light'] & {
+    background: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 0px;
+  }
+
+  // ── Calendar ──────────────────────────────────────────────────
+  &__calendar {
+    padding: 16px 24px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+    [data-theme='light'] & {
+      border-bottom-color: rgba(0, 0, 0, 0.06);
+    }
+
+    @media (max-width: 671px) {
+      padding: 12px 16px 16px;
+    }
+  }
+
+  &__cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  &__cal-month {
+    font-size: 15px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+  }
+
+  &__cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0;
+    text-align: center;
+  }
+
+  &__cal-head {
+    font-size: 11px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    padding: 4px 0 8px;
+  }
+
+  &__cal-day {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    font-size: 13px;
+    color: var(--color-text-primary);
+    border-radius: 50%;
+
+    &--muted {
+      color: var(--color-text-disabled);
+    }
+
+    &--today {
+      font-weight: var(--font-weight-bold);
+      color: var(--color-site-primary-text);
+      z-index: 0; // stacking context를 여기서 생성
+
+      &::after {
+        content: '';
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--color-site-primary);
+        z-index: -1;
+      }
+    }
+  }
+
+  &__cal-dot {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-site-primary);
+
+    .events-list__cal-day--today & {
+      background: var(--color-site-primary-text);
+    }
+  }
+
+  // ── Section title (Upcoming Events) ──────────────────────────
+  &__section-title {
+    padding: 16px 24px 0;
+    font-size: 15px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+
+    @media (max-width: 671px) {
+      padding: 12px 16px 0;
+    }
+  }
+
+  // ── Empty state ──
+  &__empty {
+    padding: 40px 24px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--color-text-tertiary);
+  }
+
+  // ── Items list ────────────────────────────────────────────────
+  &__items {
+    list-style: none;
+    padding: 12px 24px 24px;
+    margin: 0;
+
+    @media (max-width: 671px) {
+      padding: 8px 16px 16px;
+    }
+  }
+
+  &__item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+    [data-theme='light'] & {
+      border-bottom-color: rgba(0, 0, 0, 0.06);
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__item-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 14px 0;
+    text-decoration: none;
+    color: inherit;
+    border-radius: var(--radius-md);
+    transition: background var(--transition-fast);
+
+    &:hover {
+      background: var(--color-surface-secondary);
+      margin-left: -8px;
+      margin-right: -8px;
+      padding: 0 8px;
+
+      [data-theme='light'] & {
+        background: var(--color-surface-tertiary);
+      }
+    }
+  }
+
+  &__item-bar {
+    width: 3px;
+    align-self: stretch;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  &__item-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__item-title {
+    font-size: 15px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__item-meta {
+    font-size: 13px;
+    color: var(--color-text-tertiary);
+  }
+
+  &__item-location {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__item-arrow {
+    flex-shrink: 0;
+    color: var(--color-text-tertiary);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+
+    .events-list__item-link:hover & {
+      opacity: 1;
+    }
+  }
+}

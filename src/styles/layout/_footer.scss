@@ -8,6 +8,11 @@
   border-top: 1px solid var(--color-divider);
   margin-top: 40px;
 
+  @media (max-width: 671px) {
+    border-top: none;
+    margin-top: 0;
+  }
+
   [data-theme='light'] & {
     background: #f2f4f7;
   }
@@ -23,6 +28,58 @@
 
     @media (min-width: 1200px) {
       padding: 20px 0 28px;
+    }
+  }
+
+  // ── Mobile layout wrapper (< 672px) ──
+  &__mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+
+    @media (min-width: 672px) {
+      display: none;
+    }
+  }
+
+  &__mobile-primary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 4px;
+  }
+
+  &__mobile-primary-link {
+    font-size: 16px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    padding: 2px 0;
+    transition: color var(--transition-fast);
+
+    &:hover {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  &__mobile-secondary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0;
+  }
+
+  // ── Tablet+ layout wrapper (≥ 672px) ──
+  &__desktop {
+    display: none;
+
+    @media (min-width: 672px) {
+      display: block;
     }
   }
 

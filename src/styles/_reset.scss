@@ -87,6 +87,7 @@ select {
     border-color: var(--color-border-focus);
     box-shadow: var(--shadow-focus);
   }
+
 }
 
 // Scrollbar
@@ -105,6 +106,28 @@ select {
 
   &:hover {
     background: var(--color-border-dark);
+  }
+}
+
+// Skip Navigation — keyboard-only visible
+.skip-nav {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 9999;
+  padding: 12px 24px;
+  background: var(--color-primary-500);
+  color: #ffffff;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  opacity: 0;
+  transition: top var(--transition-fast), opacity var(--transition-fast);
+
+  &:focus {
+    top: 12px;
+    opacity: 1;
   }
 }
 

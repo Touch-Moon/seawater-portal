@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import SearchBar from './SearchBar'
+import Link from 'next/link'
+import MenuButton from './MenuButton'
 
 export default function StickySearchBar() {
   const [visible, setVisible] = useState(false)
@@ -23,7 +25,7 @@ export default function StickySearchBar() {
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll() // check initial state
+    handleScroll()
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -32,7 +34,12 @@ export default function StickySearchBar() {
       className={`sticky-search-bar${visible ? ' sticky-search-bar--visible' : ''}`}
       aria-hidden={!visible}
     >
-      <SearchBar />
+      <div className="sticky-search-bar__bar">
+        <SearchBar />
+        <div className="page__hero__actions">
+          <MenuButton />
+        </div>
+      </div>
     </div>
   )
 }

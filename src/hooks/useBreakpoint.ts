@@ -4,17 +4,20 @@ import { useState, useEffect } from 'react'
 
 // ── Breakpoints (matches $breakpoint-* in _variables.scss) ──
 export const BREAKPOINTS = {
-  md: 672,   // $breakpoint-md  ← tablet start
-  lg: 1200,  // $breakpoint-lg  ← desktop start
+  md:    672,   // $breakpoint-md     ← small tablet start
+  mdLg:  981,   // $breakpoint-md-lg  ← large tablet start
+  lg:    1200,  // $breakpoint-lg     ← desktop start
 } as const
 
 export type BreakpointKey = keyof typeof BREAKPOINTS
 
 interface Breakpoint {
   width: number
-  isMobile: boolean    // < 672px
-  isTablet: boolean    // 672–1199px
-  isDesktop: boolean   // ≥ 1200px
+  isMobile: boolean        // < 672px
+  isSmallTablet: boolean   // 672–980px
+  isLargeTablet: boolean   // 981–1199px
+  isTablet: boolean        // 672–1199px
+  isDesktop: boolean       // ≥ 1200px
   /** true when ≥ given breakpoint */
   isAbove: (bp: BreakpointKey) => boolean
   /** true when < given breakpoint */
@@ -24,11 +27,13 @@ interface Breakpoint {
 function getBreakpoint(width: number): Breakpoint {
   return {
     width,
-    isMobile:  width < BREAKPOINTS.md,
-    isTablet:  width >= BREAKPOINTS.md && width < BREAKPOINTS.lg,
-    isDesktop: width >= BREAKPOINTS.lg,
-    isAbove:   (bp) => width >= BREAKPOINTS[bp],
-    isBelow:   (bp) => width < BREAKPOINTS[bp],
+    isMobile:      width < BREAKPOINTS.md,
+    isSmallTablet: width >= BREAKPOINTS.md && width < BREAKPOINTS.mdLg,
+    isLargeTablet: width >= BREAKPOINTS.mdLg && width < BREAKPOINTS.lg,
+    isTablet:      width >= BREAKPOINTS.md && width < BREAKPOINTS.lg,
+    isDesktop:     width >= BREAKPOINTS.lg,
+    isAbove:       (bp) => width >= BREAKPOINTS[bp],
+    isBelow:       (bp) => width < BREAKPOINTS[bp],
   }
 }
 

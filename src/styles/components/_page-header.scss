@@ -1,0 +1,37 @@
+// ============================================
+//  Page Header — shared across list pages
+//  Icon (40×40) + Title (18px uppercase)
+// ============================================
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  [data-theme='light'] & {
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+  }
+
+  @media (max-width: 671px) {
+    padding: 16px;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+}

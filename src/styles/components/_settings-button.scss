@@ -25,6 +25,35 @@
       color var(--transition-fast),
       box-shadow var(--transition-fast);
 
+    // Gear button: hidden on mobile
+    @media (max-width: 671px) {
+      display: none;
+    }
+
+    // Mobile menu button: visible on mobile only
+    &--menu {
+      display: none;
+      background: var(--color-site-primary);
+      border-color: transparent;
+      color: #000000;
+
+      svg {
+        color: #000000;
+        stroke: #000000;
+      }
+
+      @media (min-width: 672px) {
+        &:hover {
+          background: var(--color-site-primary-hover);
+          transform: scale(1.08);
+        }
+      }
+
+      @media (max-width: 671px) {
+        display: flex;
+      }
+    }
+
     &:hover {
       transform: scale(1.08);
       background: var(--color-bg-tertiary);

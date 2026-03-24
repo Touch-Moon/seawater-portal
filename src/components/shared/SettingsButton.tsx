@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useTheme } from 'next-themes'
+import { useSidePanel } from '@/context/SidePanelContext'
 
 // Future: wire these to a global context
 type TextSize = 'default' | 'large' | 'larger'
@@ -9,14 +10,32 @@ type AppearanceMode = 'light' | 'dark' | 'system'
 
 export default function SettingsButton() {
   const [isOpen, setIsOpen]       = useState(false)
-  const [textSize, setTextSize]   = useState<TextSize>('default')
+  const [textSize, setTextSize]   = useState<TextSize>(() => {
+    if (typeof window === 'undefined') return 'default'
+    return (localStorage.getItem('text-size') as TextSize) ?? 'default'
+  })
   const panelRef                  = useRef<HTMLDivElement>(null)
   const btnRef                    = useRef<HTMLButtonElement>(null)
   const { theme, setTheme }       = useTheme()
+  const { openPanel }             = useSidePanel()
 
   const appearance: AppearanceMode = (theme as AppearanceMode) ?? 'dark'
 
   const close = useCallback(() => setIsOpen(false), [])
+
+  // 텍스트 크기 → html data-text-size 적용
+  useEffect(() => {
+    document.documentElement.dataset.textSize = textSize
+    localStorage.setItem('text-size', textSize)
+  }, [textSize])
+
+  // 초기 로드 시 저장값 복원
+  useEffect(() => {
+    const saved = localStorage.getItem('text-size') as TextSize | null
+    if (saved && saved !== 'default') {
+      setTextSize(saved)
+    }
+  }, [])
 
   // Close on outside click
   useEffect(() => {
@@ -54,6 +73,19 @@ export default function SettingsButton() {
 
   return (
     <>
+      {/* Mobile menu button — same position as gear button, visible on mobile only */}
+      <button
+        className="settings-button__btn settings-button__btn--menu"
+        onClick={openPanel}
+        aria-label="Open menu"
+      >
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" >
+          <line x1="3" y1="5.5"  x2="21" y2="5.5"  stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <line x1="3" y1="12"   x2="21" y2="12"   stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <line x1="3" y1="18.5" x2="21" y2="18.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </button>
+
       {/* Gear button */}
       <button
         ref={btnRef}

@@ -9,13 +9,8 @@
     background: var(--color-bg-primary);
     margin: 0 auto;
 
-    @media (min-width: 672px) {
-      padding: 48px 0 0 0;
-      justify-content: center;
-    }
-
     @media (min-width: 1200px) {
-      padding: 48px 0 0 0;
+      justify-content: center;
       max-width: 600px;
     }
   }
@@ -35,7 +30,7 @@
         #ffc114 100%);
     overflow: hidden;
 
-    @media (min-width: 672px) {
+    @media (min-width: 1200px) {
       max-width: 600px;
     }
 
@@ -54,6 +49,10 @@
     &--focused::before {
       transform: translateX(0);
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      &::before { transition: none; }
+    }
   }
 
   // inner fills wrapper, clips to pill shape
@@ -66,8 +65,12 @@
     height: 100%;
     border-radius: var(--radius-full);
     background: #2c2e33;
-    padding: 0 8px 0 24px;
+    padding: 0 8px 0 16px;
     gap: 6px;
+
+    @media (min-width: 672px) {
+      padding-left: 24px;
+    }
 
     [data-theme='light'] & {
       background: #ffffff;
@@ -90,11 +93,15 @@
   &__logo-wrap {
     position: relative;
     display: flex;
-    width: 126px;
+    width: 24px; // 모바일: icon-only
     height: 24px;
     flex-shrink: 0;
     overflow: hidden;
     transition: width 0.4s ease;
+
+    @media (min-width: 672px) {
+      width: 126px;
+    }
   }
 
   // Focused: shrink logo to icon-only (≈24px mark)
@@ -220,6 +227,12 @@
     padding: 12px;
     border-radius: var(--radius-base);
     transition: color var(--transition-fast);
+
+    &--keyboard {
+      @media (max-width: 671px) {
+        display: none;
+      }
+    }
 
     &:hover {
       color: #ffffff;

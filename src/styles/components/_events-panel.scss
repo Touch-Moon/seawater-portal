@@ -5,6 +5,14 @@
 
 .events-panel {
 
+  &.panel {
+    @media (max-width: 671px) {
+      border-radius: 0;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
   // ── Inner: 상하 구조 ──
   &__inner {
     display: flex;
@@ -93,9 +101,9 @@
     }
   }
 
-  // 아이템 1개 높이: title(17px) + gap(3px) + meta(16px) = 36px
-  // 3개 + gap(8px)*2 = 124px
-  $slot-item-h: 36px;
+  // 아이템 1개 높이: title(21px) + gap(3px) + meta(16px) = 40px
+  // 3개 + gap(8px)*2 = 136px
+  $slot-item-h: 40px;
   $slot-gap: 8px;
   $slot-rows: 3;
   $slot-total: $slot-item-h * $slot-rows + $slot-gap * ($slot-rows - 1); // 124px
@@ -117,6 +125,10 @@
     &--sliding {
       transform: translateY(-#{$slot-total});
       transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
     }
   }
 
@@ -169,7 +181,7 @@
   }
 
   &__event-title {
-    font-size: 13px;
+    font-size: 16px;
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-primary);
     line-height: 1.3;
@@ -431,5 +443,17 @@
     border-radius: 50%;
     background: var(--color-site-primary);
     pointer-events: none;
+  }
+
+  &--mobile {
+    @media (min-width: 672px) {
+      display: none;
+    }
+  }
+
+  &--desktop {
+    @media (max-width: 671px) {
+      display: none;
+    }
   }
 }

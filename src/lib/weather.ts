@@ -81,6 +81,130 @@ export const WEATHER_FALLBACK: WeatherResult = {
   low:       -8,
 }
 
+// ── Full weather data for /weather dashboard page ──
+
+export interface HourForecast {
+  time:         string   // 'HH:mm'
+  temp:         number
+  condition:    string
+  icon:         string
+  chanceOfRain: number
+  windKph:      number
+  humidity:     number
+  feelsLike:    number
+  isDay:        boolean
+}
+
+export interface DayForecast {
+  date:         string   // 'YYYY-MM-DD'
+  dayOfWeek:    string   // 'Mon', 'Tue', ...
+  condition:    string
+  icon:         string
+  high:         number
+  low:          number
+  chanceOfRain: number
+  avgHumidity:  number
+  maxWindKph:   number
+  sunrise:      string
+  sunset:       string
+  hours:        HourForecast[]
+}
+
+export interface WeatherFull {
+  city:        string
+  region:      string
+  country:     string
+  localTime:   string
+  condition:   string
+  icon:        string
+  temp:        number
+  feelsLike:   number
+  high:        number
+  low:         number
+  humidity:    number
+  windKph:     number
+  windDir:     string
+  pressureMb:  number
+  uvIndex:     number
+  visKm:       number
+  isDay:       boolean
+  days:        DayForecast[]
+}
+
+const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+export async function fetchWeatherFull(location: string): Promise<WeatherFull | null> {
+  const key = process.env.WEATHER_API_KEY
+  if (!key) return null
+
+  try {
+    const res = await fetch(
+      `https://api.weatherapi.com/v1/forecast.json?key=${key}&q=${encodeURIComponent(location)}&days=3&aqi=no`,
+      { next: { revalidate: 300 } },
+    )
+    if (!res.ok) return null
+
+    const data = await res.json()
+    const cur = data.current
+    const todayDay = data.forecast.forecastday[0].day
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const days: DayForecast[] = data.forecast.forecastday.map((fd: any) => {
+      const d = new Date(fd.date + 'T12:00:00')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const hours: HourForecast[] = fd.hour.map((h: any) => ({
+        time:         h.time.split(' ')[1]?.slice(0, 5) ?? h.time,
+        temp:         Math.round(h.temp_c),
+        condition:    h.condition.text,
+        icon:         getWeatherIcon(h.condition.code, h.is_day === 1),
+        chanceOfRain: h.chance_of_rain,
+        windKph:      Math.round(h.wind_kph),
+        humidity:     h.humidity,
+        feelsLike:    Math.round(h.feelslike_c),
+        isDay:        h.is_day === 1,
+      }))
+
+      return {
+        date:         fd.date,
+        dayOfWeek:    DAY_NAMES[d.getDay()],
+        condition:    fd.day.condition.text,
+        icon:         getWeatherIcon(fd.day.condition.code, true),
+        high:         Math.round(fd.day.maxtemp_c),
+        low:          Math.round(fd.day.mintemp_c),
+        chanceOfRain: fd.day.daily_chance_of_rain,
+        avgHumidity:  fd.day.avghumidity,
+        maxWindKph:   Math.round(fd.day.maxwind_kph),
+        sunrise:      fd.astro.sunrise,
+        sunset:       fd.astro.sunset,
+        hours,
+      }
+    })
+
+    return {
+      city:       data.location.name,
+      region:     data.location.region,
+      country:    data.location.country,
+      localTime:  data.location.localtime,
+      condition:  cur.condition.text,
+      icon:       getWeatherIcon(cur.condition.code, cur.is_day === 1),
+      temp:       Math.round(cur.temp_c),
+      feelsLike:  Math.round(cur.feelslike_c),
+      high:       Math.round(todayDay.maxtemp_c),
+      low:        Math.round(todayDay.mintemp_c),
+      humidity:   cur.humidity,
+      windKph:    Math.round(cur.wind_kph),
+      windDir:    cur.wind_dir,
+      pressureMb: cur.pressure_mb,
+      uvIndex:    cur.uv,
+      visKm:      cur.vis_km,
+      isDay:      cur.is_day === 1,
+      days,
+    }
+  } catch {
+    return null
+  }
+}
+
 export async function fetchWeather(location: string): Promise<WeatherResult | null> {
   const key = process.env.WEATHER_API_KEY
   if (!key) return null
@@ -88,7 +212,7 @@ export async function fetchWeather(location: string): Promise<WeatherResult | nu
   try {
     const res = await fetch(
       `https://api.weatherapi.com/v1/forecast.json?key=${key}&q=${encodeURIComponent(location)}&days=1&aqi=no`,
-      { next: { revalidate: 300 } }   // ISR: 5분
+      { next: { revalidate: 300 } },
     )
     if (!res.ok) return null
 

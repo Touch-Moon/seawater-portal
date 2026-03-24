@@ -17,50 +17,76 @@
     padding-top: 40px;
   }
 
-  // ── Scroll hint icon — mobile only ──
-  &__scroll-hint {
+  // ── Scroll hint wrapper — mobile + tablet(672~1199px) ──
+  // Positioned at right edge, overlays the bar with gradient + button
+  &__scroll-hint-wrap {
+    display: none;
     position: absolute;
-    right: 8px;
-    top: 20px;
-    z-index: 10;
+    right: 0;
+    top: 16px;
+    height: 52px;
+    align-items: center;
+    padding-right: 10px;
+    background: linear-gradient(to right, rgba(28, 30, 33, 0) 0%, #131416 24%);
+    pointer-events: none;
+    z-index: 2;
+
+    [data-theme='light'] & {
+      background: linear-gradient(to right, rgba(242, 244, 247, 0) 0%, #f2f4f7 24%);
+    }
+
+    button {
+      pointer-events: auto;
+    }
+
+    @media (min-width: 672px) {
+      top: 16px;
+      height: 60px;
+    }
+
+    @media (min-width: 1200px) {
+      display: none !important;
+    }
+
+    &--visible {
+      display: flex;
+    }
+  }
+
+  &__scroll-hint-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
-    color: var(--color-text-tertiary);
-    pointer-events: none;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
 
-    // Hide on tablet+ — items are centered, no scrolling
-    @media (min-width: 672px) {
-      display: none;
+    img {
+      width: 28px;
+      height: 28px;
     }
+  }
+
+  // ── Scroll hint icon — hidden (replaced by scroll-hint-wrap) ──
+  &__scroll-hint {
+    display: none;
   }
 
   // ── Top bar — horizontally scrollable on mobile ──
   &__bar {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 4px 16px 4px 16px;
-    // Extra right padding so last item can scroll clear of the hint icon + fade zone
-    padding-right: 80px;
+    padding: 8px 16px;
+    padding-right: 64px;
     scrollbar-width: none;
     cursor: grab;
     -webkit-overflow-scrolling: touch; // smooth momentum on iOS
-
-    // Fade-out mask — fully transparent before scroll-hint icon (icon: 44px + right 8px = 52px)
-    -webkit-mask-image: linear-gradient(to right,
-        transparent 0,
-        black 24px,
-        black calc(100% - 88px),
-        transparent calc(100% - 52px));
-    mask-image: linear-gradient(to right,
-        transparent 0,
-        black 24px,
-        black calc(100% - 88px),
-        transparent calc(100% - 52px));
 
     &::-webkit-scrollbar {
       display: none;
@@ -70,50 +96,31 @@
       cursor: grabbing;
     }
 
-    // Tablet+: centered, no mask, no extra padding
-    @media (min-width: 672px) {
-      justify-content: center;
-      padding-inline: 24px;
-      padding-right: 24px;
-      cursor: auto;
-      -webkit-mask-image: none;
-      mask-image: none;
-
-      &:active {
-        cursor: auto;
-      }
+    @media (max-width: 672px) {
+      gap: 24px;
     }
 
-    // Desktop: no scroll, no mask, no drag cursor, no extra padding
-    @media (min-width: 1200px) {
-      padding-inline: 32px;
-      padding-right: 32px;
-      cursor: auto;
-      -webkit-mask-image: none;
-      mask-image: none;
-
-      &:active {
-        cursor: auto;
-      }
-    }
   }
 
   // ── Menu item (shared for bar + panel) ──
   &__item {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: 0;
     flex-shrink: 0;
-    height: 44px;
-    padding: 10px 12px;
-    background: var(--quick-menu-item-bg);
-    border-radius: 22px;
+    flex: unset;
+    height: 36px;
+    padding: 0;
+    background: transparent;
+    border-radius: 18px;
     border: none;
     text-decoration: none;
     color: var(--color-text-primary);
     font-family: inherit;
     box-shadow: none;
-    transition: box-shadow var(--transition-fast);
+    transition: background var(--transition-fast);
     cursor: pointer;
 
     &:hover,
@@ -122,35 +129,40 @@
     }
 
     &:hover {
-      box-shadow: var(--quick-menu-shadow-hover);
+      background: transparent;
+      box-shadow: none;
+    }
+
+    // 소형 태블릿(672~1199px): padding 14px
+    @media (min-width: 672px) {
+      padding: 0 8px;
+      gap: 6px;
+
+      &:first-child {
+        padding-left: 0;
+      }
+    }
+
+    // 대형 태블릿(981~1199px): padding 축소
+    @media (min-width: 981px) and (max-width: 1199px) {
+      padding: 0 8px;
     }
 
     // Toggle button (... / X)
     &--toggle {
-      padding: 10px;
-      aspect-ratio: 1;
+      aspect-ratio: unset;
+      padding: 0 14px;
       justify-content: center;
       color: var(--color-text-primary);
     }
 
     &--active {
-      background: var(--color-surface-tertiary);
+      background: transparent;
     }
 
-    // Extra items: visible on mobile, hidden on tablet+
-    &--extra {
-      @media (min-width: 672px) {
-        display: none;
-      }
-    }
-
-    // More button: hidden on mobile, visible on tablet+
+    // More button: hidden
     &--more-btn {
       display: none;
-
-      @media (min-width: 672px) {
-        display: flex;
-      }
     }
   }
 
@@ -164,22 +176,32 @@
 
   // ── Icon box ──
   &__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 10px;
-    color: #ffffff;
-    flex-shrink: 0;
+    display: none; // 모바일+태블릿: 아이콘 숨김 (텍스트만)
   }
 
   // ── Label ──
   &__label {
-    font-size: 15px;
-    font-weight: var(--font-weight-semibold);
+    font-size: 18px;
+    font-weight: var(--font-weight-medium);
     white-space: nowrap;
     line-height: 1;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 100%;
+      height: 2px;
+      background-color: #fff;
+      opacity: 0;
+    }
+
+    .quick-menu__item--active &::after {
+      opacity: 1;
+    }
+
   }
 
   // ── Full-width dropdown panel ──

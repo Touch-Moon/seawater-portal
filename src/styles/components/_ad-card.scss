@@ -12,6 +12,30 @@
   align-items: center;
   justify-content: center;
 
+  // Mobile-only instance (in home__main after ClassifiedsPreview)
+  &--mobile {
+    @media (min-width: 672px) {
+      display: none;
+    }
+  }
+
+  // Desktop/sidebar instance (hidden on mobile)
+  &--desktop {
+    @media (max-width: 671px) {
+      display: none;
+    }
+  }
+
+  @media (min-width: 672px) {
+    padding: 16px;
+  }
+
+  @media (max-width: 671px) {
+    border-radius: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   [data-theme='light'] & {
     background: #ffffff;
     box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 0px;
@@ -23,6 +47,11 @@
     height: 280px;
     border-radius: var(--radius-md);
     border: 1.5px dashed rgba(255, 255, 255, 0.15);
+
+    @media (min-width: 672px) {
+      border-radius: 8px;
+    }
+
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -1,0 +1,117 @@
+// ============================================
+//  Funeral Announcements — portrait card grid
+//  Used by: /news?cat=funeral
+// ============================================
+
+// ── Grid ──
+.funeral-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px 20px;
+  padding-top: 8px;
+
+  @media (min-width: 672px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 981px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px 24px;
+  }
+}
+
+// ── Card ──
+.funeral-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--color-text-primary);
+
+  &:visited,
+  &:hover {
+    color: var(--color-text-primary);
+  }
+
+  &:hover .funeral-card__portrait img {
+    transform: scale(1.06);
+  }
+
+  // ── Portrait (1:1) ──
+  &__portrait {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-tertiary);
+    overflow: hidden;
+
+    img {
+      transition: transform 0.3s ease;
+    }
+
+    // Border overlay
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: inherit;
+      pointer-events: none;
+
+      [data-theme='light'] & {
+        border-color: rgba(0, 0, 0, 0.08);
+      }
+    }
+  }
+
+  // ── Placeholder ──
+  &__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    [data-theme='light'] & {
+      filter: brightness(1.6) saturate(0.5);
+    }
+  }
+
+  // ── Info ──
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 2px;
+  }
+
+  &__name {
+    font-size: 15px;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.3;
+    color: var(--color-text-primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    @media (min-width: 672px) {
+      font-size: 16px;
+    }
+  }
+
+  &__summary {
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--color-text-tertiary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// ── Funeral modifier on news-list ──
+.news-list--funeral {
+  padding-bottom: 24px;
+}

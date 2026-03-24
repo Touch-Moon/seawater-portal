@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useBreakpoint } from '@/hooks/useBreakpoint'
 
 const TABS = ['For Sale', 'Free'] as const
 type Tab = typeof TABS[number]
@@ -61,15 +62,17 @@ const MOCK_ITEMS: ClassifiedItem[] = [
 
 ]
 
-const ITEMS_PER_PAGE = 6
-
 export default function ClassifiedsPreview() {
+  const { width } = useBreakpoint()
+  // 대형 태블릿(981~1199): 6개 / 소형 태블릿 이하(≤980): 4개 / 데스크탑: 6개
+  const itemsPerPage = width >= 981 && width < 1200 ? 6 : width < 981 ? 4 : 6
+
   const [activeTab, setActiveTab] = useState<Tab>('For Sale')
   const [page, setPage] = useState(0)
 
   const filtered = MOCK_ITEMS.filter(item => item.cat === activeTab)
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
-  const items = filtered.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE)
+  const totalPages = Math.floor(filtered.length / itemsPerPage)
+  const items = filtered.slice(page * itemsPerPage, (page + 1) * itemsPerPage)
 
   function handleTabChange(tab: Tab) {
     setActiveTab(tab)
@@ -87,16 +90,19 @@ export default function ClassifiedsPreview() {
           </div>
           <span className="panel__title-link">
             Buy &amp; Sell
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" >
               <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </span>
         </Link>
-        <div className="classifieds-preview__tabs">
+        <div className="classifieds-preview__tabs" role="tablist" aria-label="Classifieds categories">
           {TABS.map(tab => (
             <button
               key={tab}
               type="button"
+              role="tab"
+              aria-selected={activeTab === tab}
+              aria-controls="classifieds-tabpanel"
               className={`classifieds-preview__tab${activeTab === tab ? ' classifieds-preview__tab--active' : ''}`}
               onClick={() => handleTabChange(tab)}
             >
@@ -107,11 +113,11 @@ export default function ClassifiedsPreview() {
       </div>
 
       {/* ── Card grid: 2-col × 3-row ── */}
-      <div className="classifieds-preview__grid">
+      <div id="classifieds-tabpanel" role="tabpanel" aria-label={activeTab} className="classifieds-preview__grid">
         {items.map(item => (
           <Link key={item.id} href={`/classifieds/${item.id}`} className="classifieds-preview__card">
-            <div className="classifieds-preview__thumb" aria-hidden="true">
-              <img src={item.image} alt="" loading="lazy" />
+            <div className="classifieds-preview__thumb">
+              <img src={item.image} alt={item.title} loading="lazy" />
             </div>
             <div className="classifieds-preview__info">
               <span className="classifieds-preview__card-title">{item.title}</span>
@@ -141,7 +147,7 @@ export default function ClassifiedsPreview() {
           disabled={page === 0}
           aria-label="Previous page"
         >
-          <svg width="8" height="14" viewBox="0 0 8 14" fill="none" aria-hidden="true">
+          <svg aria-hidden="true" width="8" height="14" viewBox="0 0 8 14" fill="none" >
             <path d="M7 1L1 7l6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </button>
@@ -156,7 +162,7 @@ export default function ClassifiedsPreview() {
           disabled={page === totalPages - 1}
           aria-label="Next page"
         >
-          <svg width="8" height="14" viewBox="0 0 8 14" fill="none" aria-hidden="true">
+          <svg aria-hidden="true" width="8" height="14" viewBox="0 0 8 14" fill="none" >
             <path d="M1 1l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </button>

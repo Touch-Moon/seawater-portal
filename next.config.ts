@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
   },
 
   images: {
+    // AVIF 우선, WebP 폴백 — 동일 이미지 대비 30-50% 더 작음
+    formats: ['image/avif', 'image/webp'],
+    // 최소 캐시 TTL 1시간 (기본값 60s보다 길게)
+    minimumCacheTTL: 3600,
     remotePatterns: [
       {
         protocol: 'https',

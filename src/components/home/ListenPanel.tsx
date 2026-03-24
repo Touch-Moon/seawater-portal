@@ -44,7 +44,7 @@ export default function ListenPanel() {
           </span>
           <div className="listen-panel__title-link">
             Listen
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" >
               <path d="M7 4l5 5-5 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>

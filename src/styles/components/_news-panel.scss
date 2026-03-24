@@ -5,10 +5,19 @@
 
 .news-panel {
   position: relative; // dropdown anchor
-  padding: 24px;
+  padding: 16px 24px 24px;
   background: var(--color-surface-primary);
   border-radius: var(--radius-xl);
   min-height: 200px;
+
+  @media (min-width: 672px) and (max-width: 980px) {
+    padding: 8px 16px 16px;
+  }
+
+  @media (max-width: 671px) {
+    border-radius: 0;
+    padding: 8px 10px;
+  }
 
   [data-theme='light'] & {
     background: #ffffff;
@@ -108,6 +117,12 @@
     @media (max-width: 1199px) {
       flex-direction: column;
     }
+
+    // ≤ 878px: list on top, grid below
+    @media (max-width: 878px) {
+      .news-panel__list { order: 1; }
+      .news-panel__grid { order: 2; }
+    }
   }
 
   // Left: 2×2 image grid — 167px × 2 col, gap 16px
@@ -115,13 +130,41 @@
     display: grid;
     grid-template-columns: 167px 167px;
     grid-template-rows: auto auto;
-    gap: 16px;
+    gap: 12px;
     flex: 0 0 auto; // never shrink — fixed width
 
-    @media (max-width: 1199px) {
+    // Small tablet narrow (672–879px): 2-col
+    @media (max-width: 879px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      flex: none;
+      width: 100%;
+    }
+
+    // Small tablet wide (880–980px): 3-col
+    @media (min-width: 880px) and (max-width: 980px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      flex: none;
+      width: 100%;
+    }
+
+    // Large tablet: 4-col
+    @media (min-width: 981px) and (max-width: 1199px) {
       grid-template-columns: repeat(4, minmax(0, 1fr));
       flex: none;
       width: 100%;
+    }
+
+    // News page mobile grid — 2col 고정, ≥981px에서 숨김
+    &--news-mobile {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: auto;
+      flex: none;
+      width: 100%;
+      margin-top: 12px;
+
+      @media (min-width: 981px) {
+        display: none;
+      }
     }
 
     // Community variant — 4-col full-width grid (2 rows × 4 cols = 8 items)
@@ -150,12 +193,17 @@
   }
 
   &__thumb-wrap {
+    position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
     overflow: hidden;
     border-radius: var(--radius-md);
     background: var(--color-bg-tertiary);
     flex-shrink: 0;
+
+    @media (min-width: 672px) {
+      border-radius: 8px;
+    }
   }
 
   &__thumb {
@@ -416,6 +464,10 @@
       margin-bottom: 0;
     }
 
+    @media (max-width: 671px) {
+      border-radius: 8px;
+    }
+
     &:hover .news-panel__featured-title {
       opacity: 0.8;
     }
@@ -667,6 +719,21 @@
         color: var(--color-site-primary-text);
       }
     }
+
+    // ... more button (tablet only)
+    &--more {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      justify-content: center;
+    }
+  }
+
+  // tabs wrapper with only ... button — push to right
+  &__tabs--more-only {
+    margin-left: auto;
   }
 
 }

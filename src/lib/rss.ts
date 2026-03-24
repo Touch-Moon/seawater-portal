@@ -52,9 +52,11 @@ function extractImage(descHtml: string): string | null {
   return match ? match[1] : null;
 }
 
-/** description HTML → 순수 텍스트 (img 제거, 태그 strip) */
+/** description HTML → 순수 텍스트 (img 제거, style/script 블록 제거, 태그 strip) */
 function htmlToText(html: string): string {
   return html
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
     .replace(/<img[^>]*>/gi, '')
     .replace(/<[^>]+>/g, ' ')
     .replace(/\s+/g, ' ')
@@ -110,7 +112,7 @@ export async function fetchRssFeed(
   const url = `${BASE}/${category}`;
 
   const res = await fetch(url, {
-    next: { revalidate: 300 }, // 5분 ISR
+    next: { revalidate: 60 }, // 1분 ISR
     ...fetchOptions,
   });
 
@@ -154,7 +156,7 @@ export async function fetchExternalRss(
   defaultSource = 'Reuters',
 ): Promise<RssArticle[]> {
   try {
-    const res = await fetch(url, { next: { revalidate: 300 } });
+    const res = await fetch(url, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     const xml = await res.text();
 
@@ -196,6 +198,74 @@ export async function fetchExternalRss(
   } catch {
     return [];
   }
+}
+
+/**
+ * slug로 단건 기사 조회 — 카테고리별 피드 병렬 fetch
+ * /rss/all (3000+ items) 대신 6개 카테고리를 병렬로 가져와 빠르게 검색
+ * 관련 기사도 함께 반환 (같은 카테고리 우선, 최대 relatedLimit개)
+ */
+const SEARCH_CATEGORIES = [
+  'local-news', 'national-news', 'local-sports',
+  'ag-news', 'community', 'sponsored',
+] as const;
+
+export async function fetchArticleBySlug(
+  slug: string,
+  relatedLimit = 4,
+): Promise<{ article: RssArticle | null; related: RssArticle[] }> {
+  // 6개 카테고리 병렬 fetch (각 20개씩, slug 탐색에 충분)
+  const feeds = await Promise.all(
+    SEARCH_CATEGORIES.map((cat) => fetchRssFeed(cat, 20)),
+  );
+  const allArticles = feeds.flat();
+
+  const article = allArticles.find((a) => a.slug === slug) ?? null;
+  if (!article) return { article: null, related: [] };
+
+  // 같은 카테고리 우선, 없으면 전체에서 채움
+  const sameCat = allArticles.filter(
+    (a) => a.slug !== slug && a.category === article.category,
+  );
+  const others = allArticles.filter(
+    (a) => a.slug !== slug && a.category !== article.category,
+  );
+  const related = [...sameCat, ...others].slice(0, relatedLimit);
+
+  return { article, related };
+}
+
+/**
+ * 키워드 검색 — 6개 카테고리 병렬 fetch 후 제목+요약 텍스트 매칭
+ * funeral 제외, 모든 결과는 "News" 카테고리로 통합
+ */
+export async function searchArticles(
+  query: string,
+  limit = 30,
+): Promise<RssArticle[]> {
+  if (!query.trim()) return [];
+
+  const feeds = await Promise.all(
+    SEARCH_CATEGORIES.map((cat) => fetchRssFeed(cat, 20)),
+  );
+  const allArticles = feeds.flat();
+
+  const keywords = query.toLowerCase().split(/\s+/).filter(Boolean);
+
+  const matched = allArticles.filter((a) => {
+    const text = `${a.title} ${a.summary}`.toLowerCase();
+    return keywords.every((kw) => text.includes(kw));
+  });
+
+  // 중복 slug 제거
+  const seen = new Set<string>();
+  const unique = matched.filter((a) => {
+    if (seen.has(a.slug)) return false;
+    seen.add(a.slug);
+    return true;
+  });
+
+  return unique.slice(0, limit);
 }
 
 // 외부 RSS 소스 목록

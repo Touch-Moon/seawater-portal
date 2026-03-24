@@ -7,12 +7,27 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 671px) {
+    display: none;
+  }
+
   gap: 8px;
   height: 130px;
   padding: 20px;
   background: var(--color-surface-primary);
   border-radius: var(--radius-xl);
   border: none;
+
+  @media (min-width: 672px) and (max-width: 980px) {
+    padding: 8px 16px 8px;
+  }
+
+  @media (max-width: 671px) {
+    border-radius: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 
   [data-theme='light'] & {
     background: #ffffff;
@@ -76,5 +91,140 @@
     height: 10px;
     background: var(--color-border-medium);
     border-radius: 1px;
+  }
+
+  // ── 로그인 상태 ────────────────────────────────────────────
+  &--logged-in {
+    height: 130px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0;
+    padding: 12px 20px;
+    overflow: hidden;
+  }
+
+  // 상단: 프로필 + 로그아웃
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  &__profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    min-width: 0;
+    flex: 1;
+
+    &:hover .login-panel__name {
+      color: var(--color-text-primary);
+      text-decoration: underline;
+    }
+  }
+
+  &__avatar {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4aabf7, #8e54e9);
+    color: #fff;
+    font-size: 17px;
+    font-weight: var(--font-weight-bold);
+  }
+
+  &__name {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color var(--transition-fast);
+  }
+
+  &__signout {
+    flex-shrink: 0;
+    padding: 7px 14px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border-medium);
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+
+    &:hover {
+      border-color: var(--color-text-secondary);
+      color: var(--color-text-primary);
+      background: var(--color-bg-secondary);
+    }
+  }
+
+  // 구분선
+  &__sep {
+    height: 1px;
+    background: var(--color-border-light);
+    margin: 12px 0 4px;
+
+    [data-theme='light'] & {
+      background: rgba(0, 0, 0, 0.07);
+    }
+  }
+
+  // 하단: 단축 메뉴
+  &__menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 4px;
+  }
+
+  &__menu-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 8px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: var(--font-weight-medium);
+    transition: color var(--transition-fast), background var(--transition-fast);
+
+    svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      opacity: 0.8;
+      transition: opacity var(--transition-fast);
+    }
+
+    &:hover {
+      color: #fff;
+      background: var(--color-bg-secondary);
+
+      svg {
+        opacity: 1;
+      }
+    }
+
+    [data-theme='light'] & {
+      color: var(--color-text-primary);
+
+      &:hover {
+        color: var(--color-text-primary);
+      }
+    }
   }
 }

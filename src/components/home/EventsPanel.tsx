@@ -47,7 +47,7 @@ function SlotItem({ event }: { event: MockEvent }) {
   )
 }
 
-export default function EventsPanel() {
+export default function EventsPanel({ mobile, desktop }: { mobile?: boolean; desktop?: boolean } = {}) {
   const [expanded,   setExpanded]   = useState(false)
   const [startIdx,   setStartIdx]   = useState(0)
   const [sliding,    setSliding]    = useState(false)
@@ -84,6 +84,7 @@ export default function EventsPanel() {
   // ── Rolling interval (ContestPanel 동일 패턴) ──
   function startInterval() {
     if (intervalRef.current) clearInterval(intervalRef.current)
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     intervalRef.current = setInterval(() => {
       if (!isHoveredRef.current && !isExpandedRef.current) setSliding(true)
     }, 3000)
@@ -123,7 +124,7 @@ export default function EventsPanel() {
 
   return (
     <div
-      className="events-panel panel"
+      className={`events-panel panel${mobile ? ' events-panel--mobile' : ''}${desktop ? ' events-panel--desktop' : ''}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

@@ -126,7 +126,6 @@ export async function fetchWeatherAlerts(
   });
 
   if (!res.ok) {
-    console.error(`[Radar] alert fetch failed: ${res.status}`);
     return [];
   }
 

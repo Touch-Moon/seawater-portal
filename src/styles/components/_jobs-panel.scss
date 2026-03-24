@@ -6,6 +6,16 @@
 .jobs-panel {
   &.panel {
     padding: 10px 24px 24px;
+
+    @media (min-width: 672px) and (max-width: 980px) {
+      padding: 10px 16px 16px;
+    }
+
+    @media (max-width: 671px) {
+      border-radius: 0;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
   }
 
   // ── Header ───────────────────────────────
@@ -168,10 +178,13 @@
   }
 
   &__title {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: var(--font-weight-medium);
     color: var(--color-text-primary);
     line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__type {
@@ -188,5 +201,17 @@
     height: 8px;
     border-radius: 50%;
     background: #f4492e;
+  }
+
+  &--mobile {
+    @media (min-width: 672px) {
+      display: none;
+    }
+  }
+
+  &--desktop {
+    @media (max-width: 671px) {
+      display: none;
+    }
   }
 }

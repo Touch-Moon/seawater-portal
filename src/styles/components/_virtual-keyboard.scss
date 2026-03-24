@@ -12,6 +12,10 @@
   user-select: none;
   animation: keyboard-in 0.18s ease both;
 
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+
   // ── Light mode override ──
   [data-theme='light'] & {
     border-color: rgba(0, 0, 0, 0.08);

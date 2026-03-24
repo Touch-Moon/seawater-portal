@@ -27,7 +27,50 @@
   .search-bar__section {
     padding-top: 16px;
     padding-bottom: 16px;
+    padding-left: 14px;
+    padding-right: 14px;
     background: transparent;
+  }
+
+  // ── Bar layout ──
+  &__bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 14px;
+
+    .search-bar__section {
+      flex: 1;
+      min-width: 0;
+      padding-left: 0;
+      padding-right: 0;
+      justify-content: flex-start;
+
+      .search-bar__wrapper {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0;
+
+      &::before {
+        content: '';
+        flex-shrink: 0;
+        width: 96px;
+      }
+
+      .search-bar__section {
+        justify-content: center;
+
+        .search-bar__wrapper {
+          max-width: 600px;
+        }
+      }
+    }
   }
 
   &--visible {

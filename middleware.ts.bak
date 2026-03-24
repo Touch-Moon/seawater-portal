@@ -1,0 +1,12 @@
+import { NextResponse, type NextRequest } from 'next/server'
+
+// Next.js 16: logic moved to src/proxy.ts (new convention)
+export function middleware(request: NextRequest) {
+  return NextResponse.next({ request })
+}
+
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
+}

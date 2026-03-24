@@ -8,6 +8,16 @@
   background: var(--color-surface-primary);
   border-radius: var(--radius-xl);
 
+  @media (min-width: 672px) and (max-width: 980px) {
+    padding: 10px 16px 16px;
+  }
+
+  @media (max-width: 671px) {
+    border-radius: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   [data-theme='light'] & {
     background: #ffffff;
     box-shadow: rgba(0, 0, 0, 0.04) 0px 0px 4px 0px;
@@ -123,17 +133,13 @@
     padding-top: 8px;
     overflow: hidden;
     transition: opacity 0.25s ease, max-height 0.3s ease;
-    max-height: 88px; // padding-top 8px + banner 80px
+    max-height: 400px; // fluid — set generously, JS controls slot-window height
     opacity: 1;
 
     &--hidden {
-      max-height: 0;
+      max-height: 0 !important;
       opacity: 0;
       padding-top: 0;
-    }
-
-    @media (max-width: 1199px) {
-      max-height: 400px; // fluid — aspect-ratio based height
     }
   }
 
@@ -153,13 +159,8 @@
 
   &__list-grid {
     display: grid;
-    grid-template-columns: 160px 160px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
-
-    @media (max-width: 1199px) {
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
   }
 
   // Clipping window — 1 row (2 banners) visible at a time
@@ -168,9 +169,37 @@
     height: 80px;
     overflow: hidden;
 
-    @media (max-width: 1199px) {
+    @media (max-width: 671px) {
       height: auto;
-      aspect-ratio: 2 / 1;
+      aspect-ratio: 4 / 1; // 2 banners (2/1 each) + gap 12px ≈ 4/1 row
+    }
+
+    // 대형 태블릿(981~1199px): 1개 배너, 비율 유지
+    &--single {
+      $row-gap: 16px;
+
+      height: auto;
+
+      .contest__slot-track {
+        gap: $row-gap;
+      }
+
+      .contest__slot-track--sliding {
+        // 첫 행 높이(50%) + gap 절반만큼 추가 이동
+        transform: translateY(calc(-50% - #{$row-gap} / 2));
+      }
+
+      .contest__slot-row {
+        height: auto;
+        flex: 1 1 0;
+      }
+
+      .contest__banner {
+        flex: 1 1 0;
+        width: auto;
+        height: auto;
+        aspect-ratio: 2 / 1;
+      }
     }
   }
 
@@ -184,33 +213,30 @@
     &--sliding {
       transform: translateY(-80px);
       transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
-    }
 
-    @media (max-width: 1199px) {
-      height: 200%;
-
-      &--sliding {
+      @media (max-width: 671px) {
         transform: translateY(-50%);
       }
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+
+    @media (max-width: 671px) {
+      height: 200%;
     }
   }
 
   // One row — 2 banners side by side
   &__slot-row {
     display: flex;
-    gap: 16px;
+    gap: 12px;
     flex-shrink: 0;
     height: 80px;
 
-    @media (max-width: 1199px) {
+    @media (max-width: 671px) {
       height: 50%;
-      gap: 0;
-      overflow: hidden;
-
-      // 두 번째 배너 숨김 — 1개만 표시
-      .contest__banner + .contest__banner {
-        display: none;
-      }
     }
   }
 
@@ -225,8 +251,10 @@
     overflow: hidden;
     background: var(--color-bg-tertiary);
 
-    @media (max-width: 1199px) {
-      width: 100%;
+    @media (max-width: 671px) {
+      flex: 1 1 0;
+      min-width: 0;
+      width: auto;
       height: 100%;
     }
 
@@ -251,5 +279,17 @@
     height: 100%;
     object-fit: cover;
     display: block;
+  }
+
+  &--mobile {
+    @media (min-width: 672px) {
+      display: none;
+    }
+  }
+
+  &--desktop {
+    @media (max-width: 671px) {
+      display: none;
+    }
   }
 }
