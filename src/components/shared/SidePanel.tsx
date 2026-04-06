@@ -132,7 +132,7 @@ export default function SidePanel({ open, onClose }: SidePanelProps) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       // 토큰 갱신 실패 (Supabase 프로젝트 일시정지 등) → 비로그인 처리
-      if (event === 'TOKEN_REFRESH_FAILED') {
+      if ((event as string) === 'TOKEN_REFRESH_FAILED') {
         setIsLoggedIn(false)
         setUserName('')
         setUserEmail('')

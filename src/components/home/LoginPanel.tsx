@@ -45,7 +45,7 @@ export default function LoginPanel() {
         return
       }
       // 토큰 갱신 실패 (Supabase 프로젝트 일시정지 등) → 비로그인 처리
-      if (event === 'TOKEN_REFRESH_FAILED') {
+      if ((event as string) === 'TOKEN_REFRESH_FAILED') {
         setUser(null)
         return
       }
