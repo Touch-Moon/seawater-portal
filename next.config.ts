@@ -1,13 +1,40 @@
 import type { NextConfig } from 'next'
 
+// ── 보안 헤더 — Vercel 배포 기준 ──
+const securityHeaders = [
+  // 클릭재킹 방지: 동일 오리진 iframe만 허용
+  { key: 'X-Frame-Options',           value: 'SAMEORIGIN' },
+  // MIME 스니핑 방지
+  { key: 'X-Content-Type-Options',    value: 'nosniff' },
+  // Referrer 정보 최소화
+  { key: 'Referrer-Policy',           value: 'strict-origin-when-cross-origin' },
+  // 권한 정책: 불필요한 API 차단
+  { key: 'Permissions-Policy',        value: 'camera=(), microphone=(), geolocation=()' },
+  // XSS 필터 강제 활성 (구형 브라우저 호환)
+  { key: 'X-XSS-Protection',         value: '1; mode=block' },
+  // HTTPS 강제 (Vercel은 자동 적용, 명시적 선언으로 보강)
+  { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+]
+
 const nextConfig: NextConfig = {
   reactCompiler: false,
 
-  // Hide dev badge — only show on build errors
+  // 개발 배지 숨김 — 빌드 오류 시에만 표시
   devIndicators: false,
 
   turbopack: {
     root: process.cwd(),
+  },
+
+  // ── 보안 헤더 적용 ──
+  async headers() {
+    return [
+      {
+        // 모든 라우트에 적용
+        source: '/(.*)',
+        headers: securityHeaders,
+      },
+    ]
   },
 
   images: {

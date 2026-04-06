@@ -260,7 +260,7 @@ interface NewsPanelProps {
 export default function NewsPanel({
   title = 'News',
   titleHref = '/news',
-  icon = '/ico-news.svg',
+  icon = '/icon-news.svg',
   showCategoryTabs = true,
   variant = 'default',
   articles,

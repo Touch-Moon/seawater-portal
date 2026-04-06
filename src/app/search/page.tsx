@@ -71,7 +71,7 @@ export default async function SearchPage({
             <div className="search-results__section-header">
               <span className="search-results__section-icon">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/ico-news.svg" width={28} height={28} alt="" aria-hidden="true" />
+                <img src="/icon-news.svg" width={28} height={28} alt="" aria-hidden="true" />
               </span>
               <h2 className="search-results__section-title">News</h2>
             </div>

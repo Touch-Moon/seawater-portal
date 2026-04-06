@@ -1,4 +1,4 @@
-// ── CSS Reset ──
+// ── CSS 리셋 + 접근성 기반 스타일 ──
 
 *,
 *::before,
@@ -90,7 +90,31 @@ select {
 
 }
 
-// Scrollbar
+// ── 전역 focus-visible — 키보드 내비게이션 시각 표시 ──
+// :focus는 숨기고 :focus-visible만 노출 → 마우스 사용자에겐 아웃라인 없음
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+// ── 동작 감소 선호 — 전역 애니메이션 비활성화 ──
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// ── 스크롤바 스타일 ──
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -109,7 +133,7 @@ select {
   }
 }
 
-// Skip Navigation — keyboard-only visible
+// ── 스킵 내비게이션 — 키보드 포커스 시에만 표시 ──
 .skip-nav {
   position: absolute;
   top: -100%;
@@ -131,7 +155,7 @@ select {
   }
 }
 
-// Utility
+// ── 스크린 리더 전용 유틸리티 ──
 .sr-only {
   position: absolute;
   width: 1px;

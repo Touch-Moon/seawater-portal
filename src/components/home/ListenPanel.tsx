@@ -3,21 +3,21 @@ import Link from 'next/link'
 const CHANNELS = [
   {
     id: 'am1250',
-    logo: '/radio1-light.svg',
+    logo: '/logo-am1250-light.svg',
     alt: 'AM 1250 Radio',
     href: '/listen/am1250',
     bg: '#1a4bb5',
   },
   {
     id: 'mix967',
-    logo: '/radio2-light.svg',
+    logo: '/logo-mix967-light.svg',
     alt: 'MIX 96.7 FM',
     href: '/listen/mix967',
     bg: '#1565d8',
   },
   {
     id: 'country1077',
-    logo: '/radio3-light.svg',
+    logo: '/logo-country107-light.svg',
     alt: 'Country 107.7',
     href: '/listen/country1077',
     bg: '#1a1a1a',
@@ -40,7 +40,7 @@ export default function ListenPanel() {
         <Link href="/listen" className="listen-panel__title-wrap">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <span className="listen-panel__icon" aria-hidden="true">
-            <img src="/ico-listen.svg" width={40} height={40} alt="" />
+            <img src="/icon-listen.svg" width={40} height={40} alt="" />
           </span>
           <div className="listen-panel__title-link">
             Listen

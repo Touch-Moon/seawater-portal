@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
-// ── Breakpoints (matches $breakpoint-* in _variables.scss) ──
+// ── 브레이크포인트 (_variables.scss의 $breakpoint-* 값과 동기화) ──
 export const BREAKPOINTS = {
-  md:    672,   // $breakpoint-md     ← small tablet start
-  mdLg:  981,   // $breakpoint-md-lg  ← large tablet start
-  lg:    1200,  // $breakpoint-lg     ← desktop start
+  md:    672,   // $breakpoint-md   ← 소형 태블릿 시작
+  mdLg:  981,   // $breakpoint-md-lg ← 대형 태블릿 시작
+  lg:    1200,  // $breakpoint-lg   ← 데스크탑 시작
 } as const
 
 export type BreakpointKey = keyof typeof BREAKPOINTS
@@ -18,9 +18,9 @@ interface Breakpoint {
   isLargeTablet: boolean   // 981–1199px
   isTablet: boolean        // 672–1199px
   isDesktop: boolean       // ≥ 1200px
-  /** true when ≥ given breakpoint */
+  /** 지정 브레이크포인트 이상이면 true */
   isAbove: (bp: BreakpointKey) => boolean
-  /** true when < given breakpoint */
+  /** 지정 브레이크포인트 미만이면 true */
   isBelow: (bp: BreakpointKey) => boolean
 }
 
@@ -40,30 +40,30 @@ function getBreakpoint(width: number): Breakpoint {
 /**
  * useBreakpoint
  *
- * Returns current viewport breakpoint info.
- * SSR-safe: returns desktop defaults on server, hydrates after mount.
+ * 현재 뷰포트 브레이크포인트 정보를 반환한다.
+ * SSR 안전: 서버에서는 데스크탑 기본값을 반환하고 마운트 후 정확한 값으로 수화한다.
  *
  * @example
  * const { isDesktop, isBelow } = useBreakpoint()
- * if (isBelow('md')) { ... }  // mobile-only logic
+ * if (isBelow('md')) { ... }  // 모바일 전용 분기
  */
 export function useBreakpoint(): Breakpoint {
   const [bp, setBp] = useState<Breakpoint>(() =>
-    // SSR-safe default (desktop)
+    // SSR 기본값: 데스크탑 너비로 초기화
     getBreakpoint(BREAKPOINTS.lg)
   )
 
-  useEffect(() => {
-    function handleResize() {
-      setBp(getBreakpoint(window.innerWidth))
-    }
+  const handleResize = useCallback(() => {
+    setBp(getBreakpoint(window.innerWidth))
+  }, [])
 
-    // Set accurate value immediately after mount
+  useEffect(() => {
+    // 마운트 직후 실제 뷰포트 너비로 즉시 갱신
     handleResize()
 
     window.addEventListener('resize', handleResize, { passive: true })
     return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  }, [handleResize])
 
   return bp
 }

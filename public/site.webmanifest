@@ -1,0 +1,19 @@
+{
+  "name": "SteinbachOnline",
+  "short_name": "Steinbach",
+  "description": "Local news, weather, events, and community information in Steinbach, Manitoba.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#131416",
+  "theme_color": "#131416",
+  "lang": "en-CA",
+  "icons": [
+    {
+      "src": "/favicon-dark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["news", "weather", "community"]
+}

@@ -124,7 +124,7 @@ export default async function EventsPage() {
         <div className="page-header">
           <div className="page-header__icon" aria-hidden="true">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/ico-event.svg" width={40} height={40} alt="" />
+            <img src="/icon-event.svg" width={40} height={40} alt="" />
           </div>
           <h1 className="page-header__title">Events</h1>
         </div>

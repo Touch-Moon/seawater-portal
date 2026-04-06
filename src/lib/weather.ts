@@ -1,7 +1,7 @@
 // ============================================================
-//  WeatherAPI (api.weatherapi.com) integration
-//  Docs: https://www.weatherapi.com/docs/
-//  ISR: 5분마다 갱신 (revalidate: 300)
+//  WeatherAPI (api.weatherapi.com) 연동
+//  공식 문서: https://www.weatherapi.com/docs/
+//  ISR: 5분마다 캐시 갱신 (revalidate: 300)
 // ============================================================
 
 export interface WeatherResult {
@@ -13,8 +13,8 @@ export interface WeatherResult {
   low:       number
 }
 
-// ── WeatherAPI condition code → Basmilius icon name ──
-// https://www.weatherapi.com/docs/weather_conditions.json
+// ── WeatherAPI 날씨 코드 → Basmilius 아이콘 이름 매핑 ──
+// 전체 코드표: https://www.weatherapi.com/docs/weather_conditions.json
 const ICON_MAP: Record<number, { day: string; night: string }> = {
   1000: { day: 'clear-day',                    night: 'clear-night' },
   1003: { day: 'partly-cloudy-day',             night: 'partly-cloudy-night' },
@@ -81,10 +81,10 @@ export const WEATHER_FALLBACK: WeatherResult = {
   low:       -8,
 }
 
-// ── Full weather data for /weather dashboard page ──
+// ── /weather 대시보드 페이지용 전체 날씨 데이터 ──
 
 export interface HourForecast {
-  time:         string   // 'HH:mm'
+  time:         string   // 'HH:mm' 형식
   temp:         number
   condition:    string
   icon:         string
@@ -96,8 +96,8 @@ export interface HourForecast {
 }
 
 export interface DayForecast {
-  date:         string   // 'YYYY-MM-DD'
-  dayOfWeek:    string   // 'Mon', 'Tue', ...
+  date:         string   // 'YYYY-MM-DD' 형식
+  dayOfWeek:    string   // 'Mon', 'Tue' 등 요일 약어
   condition:    string
   icon:         string
   high:         number

@@ -28,7 +28,7 @@ export default function NewsletterPanel({ mobile, desktop }: NewsletterPanelProp
       {/* Icon + heading */}
       <div className="newsletter-panel__header">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="newsletter-panel__icon" src="/ico-mail-subscription.svg" alt="" width={40} height={40} aria-hidden="true" />
+        <img className="newsletter-panel__icon" src="/icon-email.svg" alt="" width={40} height={40} aria-hidden="true" />
         <div className="newsletter-panel__heading">
           <span className="newsletter-panel__title">Daily Newsletter</span>
           <span className="newsletter-panel__subtitle">Top local stories in your inbox</span>

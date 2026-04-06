@@ -143,7 +143,7 @@ export default function EventsPanel({ mobile, desktop }: { mobile?: boolean; des
               aria-label={expanded ? 'Collapse' : 'Expand'}
               onClick={() => setExpanded(v => !v)}
             >
-              <img src="/ico-down-arrow.svg" width={16} height={16} alt="" aria-hidden="true" />
+              <img src="/icon-chevron-down.svg" width={16} height={16} alt="" aria-hidden="true" />
             </button>
           </div>
 
@@ -185,7 +185,7 @@ export default function EventsPanel({ mobile, desktop }: { mobile?: boolean; des
             {/* View all events link */}
             <Link href="/events" className="events-panel__tab">
               View all events
-              <img src="/ico-gotolink-right-arrow.svg" width={14} height={14} alt="" aria-hidden="true" />
+              <img src="/icon-arrow-right.svg" width={14} height={14} alt="" aria-hidden="true" />
             </Link>
           </div>
         </div>
@@ -229,7 +229,7 @@ export default function EventsPanel({ mobile, desktop }: { mobile?: boolean; des
             aria-expanded={expanded}
           >
             {expanded ? 'Less' : 'More events'}
-            <img src="/ico-down-arrow.svg" width={14} height={14} alt="" aria-hidden="true" />
+            <img src="/icon-chevron-down.svg" width={14} height={14} alt="" aria-hidden="true" />
           </button>
         </div> */}
 

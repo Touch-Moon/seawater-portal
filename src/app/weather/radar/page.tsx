@@ -22,9 +22,9 @@ export default async function RadarPage() {
         <div className="radar-page__left">
           <Link href="/" className="radar-page__logo" aria-label="SteinbachOnline Home">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/ico-logo-brandcolor.svg" alt="" height={24} aria-hidden="true" className="radar-page__logo-dark" />
+            <img src="/logo-brandcolor-dark.svg" alt="" height={24} aria-hidden="true" className="radar-page__logo-dark" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/ico-logo-brandcolor-light.svg" alt="" height={24} aria-hidden="true" className="radar-page__logo-light" />
+            <img src="/logo-brandcolor-light.svg" alt="" height={24} aria-hidden="true" className="radar-page__logo-light" />
           </Link>
           <div className="radar-page__divider" />
           <h1 className="radar-page__title">Radar</h1>

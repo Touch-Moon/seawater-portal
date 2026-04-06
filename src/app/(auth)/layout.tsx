@@ -7,7 +7,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="auth-layout__logo-wrap">
         <Link href="/" className="auth-layout__logo" aria-label="SteinbachOnline Home">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/ico-logo-brandcolor.svg" alt="SteinbachOnline" width={160} height={30} />
+          <img src="/logo-brandcolor-dark.svg" alt="SteinbachOnline" width={160} height={30} />
         </Link>
       </div>
 

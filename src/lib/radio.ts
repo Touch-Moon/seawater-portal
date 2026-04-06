@@ -16,13 +16,13 @@
 export interface RadioChannel {
   id: string;
   name: string;
-  callsign: string;       // CRTC call sign (CHSM, CILT, CJXR)
+  callsign: string;       // CRTC 방송국 콜사인 (CHSM, CILT, CJXR)
   frequency: string;
   tagline: string;
-  consoleUrl: string;     // 스트리밍 콘솔 (팝업 or iframe)
-  rdsUrl: string;         // Now Playing HTML (파싱 대상)
-  logoLight: string;      // /public/ 경로 (라이트 모드)
-  logoDark: string;       // /public/ 경로 (다크 모드)
+  consoleUrl: string;     // 스트리밍 콘솔 URL (팝업 또는 iframe)
+  rdsUrl: string;         // Now Playing HTML 파싱 대상 URL
+  logoLight: string;      // /public/ 라이트 모드 로고 경로
+  logoDark: string;       // /public/ 다크 모드 로고 경로
   color: string;          // 채널 브랜드 컬러
 }
 
@@ -35,8 +35,8 @@ export const RADIO_CHANNELS: RadioChannel[] = [
     tagline: 'Steinbach Radio',
     consoleUrl: 'https://goldenweststreaming.com/chsm/console/',
     rdsUrl: 'https://www.goldenweststreaming.com/rds/tmp/CHSM.html',
-    logoLight: '/radio1-light.svg',
-    logoDark: '/radio1-dark.svg',
+    logoLight: '/logo-am1250-light.svg',
+    logoDark: '/logo-am1250-dark.svg',
     color: '#1a3a6b',
   },
   {
@@ -47,8 +47,8 @@ export const RADIO_CHANNELS: RadioChannel[] = [
     tagline: "Steinbach's Best Mix",
     consoleUrl: 'https://goldenweststreaming.com/cilt/console/',
     rdsUrl: 'https://www.goldenweststreaming.com/rds/tmp/CILT.html',
-    logoLight: '/radio2-light.svg',
-    logoDark: '/radio2-dark.svg',
+    logoLight: '/logo-mix967-light.svg',
+    logoDark: '/logo-mix967-dark.svg',
     color: '#e91e8c',
   },
   {
@@ -59,8 +59,8 @@ export const RADIO_CHANNELS: RadioChannel[] = [
     tagline: "Manitoba's Country",
     consoleUrl: 'https://goldenweststreaming.com/cjxr/console/',
     rdsUrl: 'https://www.goldenweststreaming.com/rds/tmp/CJXR.html',
-    logoLight: '/radio3-light.svg',
-    logoDark: '/radio3-dark.svg',
+    logoLight: '/logo-country107-light.svg',
+    logoDark: '/logo-country107-dark.svg',
     color: '#2d8c3c',
   },
 ];
@@ -96,7 +96,7 @@ export async function fetchNowPlaying(
 
   try {
     const res = await fetch(channel.rdsUrl, {
-      cache: 'no-store', // 항상 최신
+      cache: 'no-store', // 매 요청마다 최신 데이터 수신
     });
 
     if (!res.ok) return null;
@@ -109,9 +109,9 @@ export async function fetchNowPlaying(
   }
 }
 
-/** RDS HTML → NowPlaying */
+/** RDS HTML을 파싱해 NowPlaying 객체로 변환 */
 function parseRdsHtml(html: string, channelId: string): NowPlaying {
-  // <style>…</style>, <script>…</script> 블록 제거 → 나머지 태그 제거 → 엔티티 디코딩
+  // <style>/<script> 블록 제거 → HTML 태그 제거 → HTML 엔티티 디코딩
   const text = html
     .replace(/<style[\s\S]*?<\/style>/gi, '')
     .replace(/<script[\s\S]*?<\/script>/gi, '')
@@ -126,7 +126,7 @@ function parseRdsHtml(html: string, channelId: string): NowPlaying {
     .replace(/\s+/g, ' ')
     .trim();
 
-  // "Artist - Title" 패턴 분리
+  // "아티스트 - 제목" 패턴 분리
   const dashIndex = text.indexOf(' - ');
   if (dashIndex > 0) {
     return {
@@ -136,7 +136,7 @@ function parseRdsHtml(html: string, channelId: string): NowPlaying {
     };
   }
 
-  // 대시 없으면 전체를 title로
+  // 대시 구분자 없으면 전체를 title로 처리
   return {
     artist: '',
     title: text || 'Unknown',
@@ -176,12 +176,12 @@ export function getRdsProxyUrl(channelId: string): string {
 
 // ——— 유틸 ———
 
-/** 채널 ID로 채널 객체 조회 */
+/** 채널 ID로 채널 설정 객체 반환 */
 export function getChannel(channelId: string): RadioChannel | undefined {
   return RADIO_CHANNELS.find((ch) => ch.id === channelId);
 }
 
-/** 콘솔 팝업 윈도우 열기 (클라이언트 전용) */
+/** 스트리밍 콘솔 팝업 창 열기 (클라이언트 전용) */
 export function openStreamPopup(channelId: string): void {
   const channel = getChannel(channelId);
   if (!channel || typeof window === 'undefined') return;

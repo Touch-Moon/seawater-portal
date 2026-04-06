@@ -39,43 +39,43 @@ const BAR_ITEMS: QuickMenuItem[] = [
     label: 'News',
     href: '/news',
     gradient: 'linear-gradient(180deg, #4aabf7, #6c80f0)',
-    icon: (<img src="/ico-news.svg" width={24} height={24} alt="" aria-hidden="true" />),
+    icon: (<img src="/icon-news.svg" width={24} height={24} alt="" aria-hidden="true" />),
   },
   {
     label: 'Local',
     href: '/local-news',
     gradient: 'linear-gradient(180deg, #6c80f0, #8e54e9)',
-    icon: (<img src="/ico-local.svg" width={24} height={24} alt="" aria-hidden="true" />),
+    icon: (<img src="/icon-local.svg" width={24} height={24} alt="" aria-hidden="true" />),
   },
   {
     label: 'National',
     href: '/national-news',
     gradient: 'linear-gradient(180deg, #8e54e9, #bb3be9)',
-    icon: (<img src="/ico-national.svg" width={24} height={24} alt="" aria-hidden="true" />),
+    icon: (<img src="/icon-national.svg" width={24} height={24} alt="" aria-hidden="true" />),
   },
   {
     label: 'Sponsored',
     href: '/sponsored',
     gradient: 'linear-gradient(180deg, #bb3be9, #e91e8c)',
-    icon: (<img src="/ico-sponsored.svg" width={24} height={24} alt="" aria-hidden="true" />),
+    icon: (<img src="/icon-sponsored.svg" width={24} height={24} alt="" aria-hidden="true" />),
   },
   {
     label: 'Sports',
     href: '/sports',
     gradient: 'linear-gradient(180deg, #e91e8c, #f46a49)',
-    icon: (<img src="/ico-sports.svg" width={24} height={24} alt="" aria-hidden="true" />),
+    icon: (<img src="/icon-sports.svg" width={24} height={24} alt="" aria-hidden="true" />),
   },
   {
     label: 'Agriculture',
     href: '/ag-news',
     gradient: 'linear-gradient(180deg, #f46a49, #ffb300)',
-    icon: (<img src="/ico-agriculture.svg" width={24} height={24} alt="" aria-hidden="true" />),
+    icon: (<img src="/icon-ag-news.svg" width={24} height={24} alt="" aria-hidden="true" />),
   },
   {
     label: 'Community',
     href: '/community',
     gradient: 'linear-gradient(180deg, #ffb300, #e96da0)',
-    icon: (<img src="/ico-community.svg" width={24} height={24} alt="" aria-hidden="true" />),
+    icon: (<img src="/icon-community.svg" width={24} height={24} alt="" aria-hidden="true" />),
   },
 ]
 
@@ -91,7 +91,7 @@ const LISTEN_CHANNELS: ListenChannel[] = [
     title: 'Steinbach Online Radio',
     subtitle: 'Local News & Talk',
     href: '/listen/radio',
-    thumb: '/radio1-dark.svg',
+    thumb: '/logo-am1250-dark.svg',
     live: true,
   },
   {
@@ -99,7 +99,7 @@ const LISTEN_CHANNELS: ListenChannel[] = [
     title: 'Community Voices',
     subtitle: 'Weekdays 9:00 AM',
     href: '/listen/community',
-    thumb: '/radio2-dark.svg',
+    thumb: '/logo-mix967-dark.svg',
     live: true,
   },
   {
@@ -107,7 +107,7 @@ const LISTEN_CHANNELS: ListenChannel[] = [
     title: 'Farm & Country',
     subtitle: 'Agriculture & Rural Life',
     href: '/listen/farm',
-    thumb: '/radio3-dark.svg',
+    thumb: '/logo-country107-dark.svg',
     live: false,
   },
 ]
@@ -201,7 +201,7 @@ export default function QuickMenu({ newsMode }: { newsMode?: boolean } = {}) {
           className="quick-menu__scroll-hint-btn"
           aria-label="Scroll navigation"
         >
-          <img src="/ico-horizontal-scroll.svg" width={28} height={28} alt="" aria-hidden="true" />
+          <img src="/icon-scroll-hint.svg" width={28} height={28} alt="" aria-hidden="true" />
         </button>
       </div>
 

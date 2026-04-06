@@ -3,7 +3,7 @@ import type { Article, Event, WeatherData, Feature, SiteConfig, Business, Classi
 
 const siteKey = process.env.NEXT_PUBLIC_SITE_KEY!;
 
-// ========== SITE CONFIG ==========
+// ========== 사이트 설정 ==========
 
 export async function getSiteConfig(): Promise<SiteConfig | null> {
   const supabase = await createClient();
@@ -15,7 +15,7 @@ export async function getSiteConfig(): Promise<SiteConfig | null> {
   return data;
 }
 
-// ========== ARTICLES ==========
+// ========== 기사 ==========
 
 export async function getTrendingArticles(options?: {
   limit?: number;
@@ -88,7 +88,7 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
   return data;
 }
 
-// ========== EVENTS ==========
+// ========== 이벤트 ==========
 
 export async function getEvents(limit = 10): Promise<Event[]> {
   const supabase = await createClient();
@@ -113,7 +113,7 @@ export async function getEventBySlug(slug: string): Promise<Event | null> {
   return data;
 }
 
-// ========== WEATHER ==========
+// ========== 날씨 ==========
 
 export async function getWeatherData(): Promise<WeatherData | null> {
   const supabase = await createClient();
@@ -125,7 +125,7 @@ export async function getWeatherData(): Promise<WeatherData | null> {
   return data;
 }
 
-// ========== FEATURES ==========
+// ========== 피처 ==========
 
 export async function getFeatures(): Promise<Feature[]> {
   const supabase = await createClient();
@@ -148,7 +148,7 @@ export async function getFeatureBySlug(slug: string): Promise<Feature | null> {
   return data;
 }
 
-// ========== BUSINESS ==========
+// ========== 비즈니스 디렉토리 ==========
 
 export async function getBusinesses(category?: string): Promise<Business[]> {
   const supabase = await createClient();
@@ -166,7 +166,7 @@ export async function getBusinesses(category?: string): Promise<Business[]> {
   return data ?? [];
 }
 
-// ========== CLASSIFIEDS ==========
+// ========== 생활정보 (Buy & Sell) ==========
 
 export async function getClassifieds(category?: string): Promise<Classified[]> {
   const supabase = await createClient();

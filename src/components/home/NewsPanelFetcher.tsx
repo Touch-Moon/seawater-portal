@@ -86,7 +86,7 @@ export async function LocalNewsPanelFetcher() {
     <NewsPanel
       title="Local News"
       titleHref="/news/local"
-      icon="/ico-local.svg"
+      icon="/icon-local.svg"
       showCategoryTabs={false}
       variant="local"
       articles={strip(articles)}
@@ -114,7 +114,7 @@ export async function NationalNewsPanelFetcher() {
     <NewsPanel
       title="National"
       titleHref="/news/national"
-      icon="/ico-national.svg"
+      icon="/icon-national.svg"
       showCategoryTabs={false}
       variant="national"
       articles={international}
@@ -133,7 +133,7 @@ export async function SportsPanelFetcher() {
     <NewsPanel
       title="Sports"
       titleHref="/news/sports"
-      icon="/ico-sports.svg"
+      icon="/icon-sports.svg"
       showCategoryTabs={false}
       variant="sports"
       articles={strip(articles)}
@@ -150,7 +150,7 @@ export async function AgNewsPanelFetcher() {
     <NewsPanel
       title="Ag News"
       titleHref="/news/ag"
-      icon="/ico-agriculture.svg"
+      icon="/icon-ag-news.svg"
       showCategoryTabs={false}
       articles={strip(articles)}
     />
@@ -168,7 +168,7 @@ export async function CommunityPanelFetcher() {
     <NewsPanel
       title="Community"
       titleHref="/news/community"
-      icon="/ico-community.svg"
+      icon="/icon-community.svg"
       showCategoryTabs={false}
       variant="community"
       articles={strip(articles)}
@@ -185,7 +185,7 @@ export async function SponsoredPanelFetcher() {
     <NewsPanel
       title="Sponsored"
       titleHref="/sponsored"
-      icon="/ico-sponsored.svg"
+      icon="/icon-sponsored.svg"
       showCategoryTabs={false}
       variant="sponsored"
       articles={strip(articles)}

@@ -22,8 +22,8 @@ export default function SearchBar({
 
   // SSR-safe: use dark (default) until mounted to avoid hydration mismatch
   const isLight = mounted && resolvedTheme === 'light'
-  const logoBrand = isLight ? '/ico-logo-brandcolor-light.svg' : '/ico-logo-brandcolor.svg'
-  const logoColorful = isLight ? '/ico-logo-colorful-light.svg' : '/ico-logo-colorful.svg'
+  const logoBrand = isLight ? '/logo-brandcolor-light.svg' : '/logo-brandcolor-dark.svg'
+  const logoColorful = isLight ? '/logo-colorful-light.svg' : '/logo-colorful-dark.svg'
 
   const handleCancel = () => setQuery('')
 

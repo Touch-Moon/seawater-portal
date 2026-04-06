@@ -122,7 +122,7 @@ export default function ContestPanel({ mobile, desktop }: { mobile?: boolean; de
           aria-label={isExpanded ? 'Collapse' : 'Expand'}
           onClick={() => setIsExpanded(v => !v)}
         >
-          <img src="/ico-down-arrow.svg" width={16} height={16} alt="" aria-hidden="true" />
+          <img src="/icon-chevron-down.svg" width={16} height={16} alt="" aria-hidden="true" />
         </button>
       </div>
 

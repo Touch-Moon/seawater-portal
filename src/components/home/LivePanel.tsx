@@ -11,7 +11,7 @@ const CHANNELS = [
     title: 'Steinbach Online Radio',
     subtitle: 'Local News & Talk',
     href: '/listen/radio',
-    thumb: '/radio1-dark.svg',
+    thumb: '/logo-am1250-dark.svg',
     live: true,
   },
   {
@@ -19,7 +19,7 @@ const CHANNELS = [
     title: 'Community Voices',
     subtitle: 'Weekdays 9:00 AM',
     href: '/listen/community',
-    thumb: '/radio2-dark.svg',
+    thumb: '/logo-mix967-dark.svg',
     live: true,
   },
   {
@@ -27,7 +27,7 @@ const CHANNELS = [
     title: 'Farm & Country',
     subtitle: 'Agriculture & Rural Life',
     href: '/listen/farm',
-    thumb: '/radio3-dark.svg',
+    thumb: '/logo-country107-dark.svg',
     live: false,
   },
 ]

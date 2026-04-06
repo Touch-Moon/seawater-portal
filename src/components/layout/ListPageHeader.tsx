@@ -60,7 +60,7 @@ export default function ListPageHeader() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               className="list-page__logo-brand list-page__logo-brand--dark"
-              src="/ico-logo-brandcolor.svg"
+              src="/logo-brandcolor-dark.svg"
               alt=""
               width={0}
               height={32}
@@ -69,7 +69,7 @@ export default function ListPageHeader() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               className="list-page__logo-brand list-page__logo-brand--light"
-              src="/ico-logo-brandcolor-light.svg"
+              src="/logo-brandcolor-light.svg"
               alt=""
               width={0}
               height={32}

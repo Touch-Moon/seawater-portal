@@ -120,6 +120,17 @@ This project was audited and remediated for WCAG 2.1 AA compliance across three 
 
 > **Lighthouse Scores:** Performance **86** · Accessibility **97** · Best Practices **96** · SEO **100**
 
+### Pre-Deployment Optimizations (2026-04-05)
+
+| Area | Change |
+|------|--------|
+| **Icon Filenames** | All `ico-*` renamed to `icon-*` (e.g. `icon-news.svg`, `icon-chevron-down.svg`). Radio logos renamed to `logo-am1250-*.svg`, `logo-mix967-*.svg`, `logo-country107-*.svg`. Partner logos renamed to `logo-local-job-shop.svg`, `logo-garage-sale.svg`. |
+| **Security Headers** | `next.config.ts` now sets `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `X-XSS-Protection`, and `Strict-Transport-Security` on all routes. |
+| **Metadata** | Root `layout.tsx` exports `viewport` (theme-color for dark/light), keywords, Twitter Card, and OpenGraph fields. All page titles use the `%s \| SteinbachOnline` template. |
+| **PWA** | `public/site.webmanifest` added; linked via `metadata.manifest`. |
+| **Accessibility** | Global `focus-visible` outline (keyboard navigation only), `prefers-reduced-motion` hard-stop for all CSS transitions added to `_reset.scss`. |
+| **Code Quality** | `useBreakpoint` now uses `useCallback` to stabilise the resize handler reference. All English comments converted to Korean across `rss.ts`, `radio.ts`, `weather.ts`, `queries.ts`, `useBreakpoint.ts`. |
+
 ## Multi-Site Architecture
 
 A single Vercel deployment serves all 10 community sites. The architecture separates **what changes** (brand, content sources) from **what stays the same** (layout, components, features) — so adding a new site requires zero code changes.
@@ -185,22 +196,41 @@ Layout, components, features, auth, database schema, and deployment — **100% s
 ## Getting Started
 
 ```bash
-# Clone
+# 클론
 git clone https://github.com/Touch-Moon/seawater-portal.git
 cd seawater-portal
 
-# Install dependencies
+# 의존성 설치
 npm install
 
-# Set up environment variables
+# 환경변수 설정
 cp .env.example .env.local
-# Fill in your keys — see .env.example for details
+# .env.example 파일 참고하여 키 값 입력
 
-# Run dev server
+# 개발 서버 실행
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the app.
+
+## Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase anonymous key |
+| `NEXT_PUBLIC_SITE_KEY` | ✅ | Site identifier (e.g. `steinbach`) |
+| `NEXT_PUBLIC_SITE_URL` | ✅ | Canonical domain (e.g. `https://steinbachonline.com`) |
+| `WEATHER_API_KEY` | ✅ | [WeatherAPI](https://www.weatherapi.com) key (free tier) |
+
+## Vercel Deployment Checklist
+
+- [ ] Set all environment variables in Vercel project settings
+- [ ] Set `NEXT_PUBLIC_SITE_URL` to the canonical production domain
+- [ ] Verify `site_configs` Supabase table has a row for the site key
+- [ ] Confirm `WEATHER_API_KEY` is active (Free tier auto-activates after trial)
+- [ ] Run `npm run build` locally — must produce 0 errors
+- [ ] Set up Mac Mini Supabase keep-alive cron job (see CLAUDE.md Reminders)
 
 ## License
 

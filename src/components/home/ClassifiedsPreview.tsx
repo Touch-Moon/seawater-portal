@@ -87,7 +87,7 @@ export default function ClassifiedsPreview() {
       <div className="panel__header">
         <Link href="/classifieds" className="panel__title-wrap">
           <div className="panel__icon" aria-hidden="true">
-            <img src="/ico-shopping.svg" width={40} height={40} alt="" />
+            <img src="/icon-shopping.svg" width={40} height={40} alt="" />
           </div>
           <span className="panel__title-link">
             Buy &amp; Sell

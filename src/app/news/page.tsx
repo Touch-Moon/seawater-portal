@@ -123,7 +123,7 @@ export default async function NewsPage({
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       className="funeral-card__placeholder"
-                      src="/ico-person-placeholder.svg"
+                      src="/icon-user.svg"
                       alt=""
                       aria-hidden="true"
                     />

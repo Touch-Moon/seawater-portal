@@ -44,15 +44,15 @@ export interface RssArticle {
   content_html: string; // description 원본 HTML
 }
 
-// ——— 내부 헬퍼 ———
+// ——— 내부 헬퍼 함수 ———
 
-/** description HTML에서 첫 번째 img src 추출 */
+/** description HTML에서 첫 번째 img 태그의 src 추출 */
 function extractImage(descHtml: string): string | null {
   const match = descHtml.match(/<img[^>]+src=["']([^"']+)["']/i);
   return match ? match[1] : null;
 }
 
-/** description HTML → 순수 텍스트 (img 제거, style/script 블록 제거, 태그 strip) */
+/** description HTML → 순수 텍스트 (img·style·script 제거 후 태그 스트립) */
 function htmlToText(html: string): string {
   return html
     .replace(/<style[\s\S]*?<\/style>/gi, '')
@@ -63,13 +63,13 @@ function htmlToText(html: string): string {
     .trim();
 }
 
-/** link URL에서 slug 추출:  /articles/{slug} → {slug} */
+/** 기사 URL에서 slug 추출: /articles/{slug} → {slug} */
 function extractSlug(link: string): string {
   const match = link.match(/\/articles\/([^/?#]+)/);
   return match ? match[1] : link.split('/').pop() ?? '';
 }
 
-/** XML <item> 요소 → RssArticle */
+/** XML &lt;item&gt; 요소를 파싱해 RssArticle로 변환 */
 function parseItem(item: Element, category: string): RssArticle {
   const get = (tag: string) =>
     item.getElementsByTagName(tag)[0]?.textContent?.trim() ?? '';
@@ -90,7 +90,7 @@ function parseItem(item: Element, category: string): RssArticle {
   };
 }
 
-// ——— 공개 API ———
+// ——— 공개 API 함수 ———
 
 const BASE = 'https://steinbachonline.com/rss';
 
@@ -123,7 +123,7 @@ export async function fetchRssFeed(
 
   const xmlText = await res.text();
 
-  // Node.js 환경 — DOMParser 없음 → 정규식 파싱
+  // Node.js 환경에서는 DOMParser 미사용 → 정규식으로 XML 파싱
   const items = parseXmlItems(xmlText);
   const mappedCategory = RSS_CATEGORY_MAP[category] ?? category;
 
@@ -144,11 +144,11 @@ export async function fetchRssFeed(
   });
 }
 
-// ——— 외부 RSS 피드 ———
+// ——— 외부 RSS 피드 파서 ———
 
 /**
- * 외부 RSS URL (BBC, Reuters 등) → RssArticle[]
- * description 내 img 없을 경우 <media:thumbnail url="..."> 추출
+ * 외부 RSS URL (BBC, Reuters 등) → RssArticle[] 변환
+ * description 내 img 없을 경우 &lt;media:thumbnail url="..."&gt;에서 썸네일 추출
  */
 export async function fetchExternalRss(
   url: string,
@@ -170,7 +170,7 @@ export async function fetchExternalRss(
       const descHtml = getCdata(block, 'description') || getTag(block, 'description');
       const link = getTag(block, 'link') || getTag(block, 'guid');
 
-      // BBC: <media:thumbnail url="..."/>  Guardian: <media:content url="..." medium="image"/>
+      // BBC: &lt;media:thumbnail url="..."/&gt;  Guardian: &lt;media:content url="..." medium="image"/&gt;
       const thumbMatch = block.match(/<media:(?:thumbnail|content)[^>]+url=["']([^"']+)["']/i);
       const thumbnail = thumbMatch ? thumbMatch[1] : null;
 
@@ -275,7 +275,7 @@ export const EXTERNAL_RSS_SOURCES = {
   'guardian-world': 'https://www.theguardian.com/world/rss',
 } as const;
 
-/** Node.js용 XML 정규식 파서 (DOMParser 미사용) */
+/** Node.js 전용 XML 정규식 파서 — DOMParser 없이 &lt;item&gt; 블록 파싱 */
 interface RawItem {
   title: string;
   link: string;
