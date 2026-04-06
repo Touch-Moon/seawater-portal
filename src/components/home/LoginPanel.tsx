@@ -1,30 +1,38 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { createBrowserClient } from '@supabase/ssr'
+import { useEffect, useState, useRef } from 'react'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
 export default function LoginPanel() {
   const [user, setUser] = useState<{ name: string; email: string } | null>(null)
   const router = useRouter()
-
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  // 클라이언트는 useEffect 내부에서 한 번만 생성 — render마다 재생성 방지
+  const supabaseRef = useRef<ReturnType<typeof createClient> | null>(null)
 
   useEffect(() => {
+    // Supabase 환경변수 미설정 시 조용히 종료 (콘솔 에러 방지)
+    if (!isSupabaseConfigured()) return
+
+    const supabase = createClient()
+    supabaseRef.current = supabase
+
     const resolveUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        const name =
-          user.user_metadata?.nickname ??
-          user.user_metadata?.full_name ??
-          user.email?.split('@')[0] ??
-          'User'
-        setUser({ name, email: user.email ?? '' })
-      } else {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          const name =
+            user.user_metadata?.nickname ??
+            user.user_metadata?.full_name ??
+            user.email?.split('@')[0] ??
+            'User'
+          setUser({ name, email: user.email ?? '' })
+        } else {
+          setUser(null)
+        }
+      } catch {
+        // 네트워크 오류 또는 프로젝트 일시정지 — 비로그인 상태로 폴백
         setUser(null)
       }
     }
@@ -34,6 +42,11 @@ export default function LoginPanel() {
       if (event === 'USER_UPDATED') {
         // 프로필 업데이트 시 서버에서 최신 메타데이터 재조회
         await resolveUser()
+        return
+      }
+      // 토큰 갱신 실패 (Supabase 프로젝트 일시정지 등) → 비로그인 처리
+      if (event === 'TOKEN_REFRESH_FAILED') {
+        setUser(null)
         return
       }
       if (session?.user) {
@@ -51,7 +64,9 @@ export default function LoginPanel() {
   }, [])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
+    if (supabaseRef.current) {
+      await supabaseRef.current.auth.signOut()
+    }
     router.push('/')
     router.refresh()
   }

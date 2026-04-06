@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback, type FormEvent } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
 
 type FontSize = 'default' | 'large' | 'larger'
 
@@ -77,18 +77,18 @@ function FontSizeModal({ onClose }: { onClose: () => void }) {
 }
 
 const QUICK_LINKS = [
-  { icon: '/ico-news.svg',      label: 'News',      href: '/news' },
-  { icon: '/ico-weather.svg',   label: 'Weather',   href: '/weather' },
-  { icon: '/ico-event.svg',     label: 'Events',    href: '/events' },
-  { icon: '/ico-listen.svg',    label: 'Listen',    href: '/listen' },
-  { icon: '/ico-local.svg',     label: 'Directory', href: '/directory' },
-  { icon: '/ico-shopping.svg',  label: 'Buy & Sell',href: '/classifieds' },
-  { icon: '/ico-sports.svg',    label: 'Sports',    href: '/news?cat=sports' },
-  { icon: '/ico-funeral.svg',   label: 'Funeral',   href: '/news?cat=funeral' },
-  { icon: '/ico-sponsored.svg',   label: 'Sponsored', href: '/news?cat=sponsored' },
-  { icon: '/ico-national.svg',    label: 'National',  href: '/news?cat=national' },
-  { icon: '/ico-agriculture.svg', label: 'Ag News',   href: '/news?cat=ag' },
-  { icon: '/ico-community.svg',   label: 'Community', href: '/news?cat=community' },
+  { icon: '/icon-news.svg',      label: 'News',      href: '/news' },
+  { icon: '/icon-weather.svg',   label: 'Weather',   href: '/weather' },
+  { icon: '/icon-event.svg',     label: 'Events',    href: '/events' },
+  { icon: '/icon-listen.svg',    label: 'Listen',    href: '/listen' },
+  { icon: '/icon-local.svg',     label: 'Directory', href: '/directory' },
+  { icon: '/icon-shopping.svg',  label: 'Buy & Sell',href: '/classifieds' },
+  { icon: '/icon-sports.svg',    label: 'Sports',    href: '/news?cat=sports' },
+  { icon: '/icon-funeral.svg',   label: 'Funeral',   href: '/news?cat=funeral' },
+  { icon: '/icon-sponsored.svg',   label: 'Sponsored', href: '/news?cat=sponsored' },
+  { icon: '/icon-national.svg',    label: 'National',  href: '/news?cat=national' },
+  { icon: '/icon-ag-news.svg', label: 'Ag News',   href: '/news?cat=ag' },
+  { icon: '/icon-community.svg',   label: 'Community', href: '/news?cat=community' },
 ]
 
 interface SidePanelProps {
@@ -113,15 +113,31 @@ export default function SidePanel({ open, onClose }: SidePanelProps) {
   const [userEmail, setUserEmail] = useState('')
 
   useEffect(() => {
+    // Supabase 환경변수 미설정 시 조용히 종료 (콘솔 에러 방지)
+    if (!isSupabaseConfigured()) return
+
     const supabase = createClient()
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) {
-        setIsLoggedIn(true)
-        setUserName(data.user.user_metadata?.full_name ?? data.user.user_metadata?.nickname ?? data.user.email?.split('@')[0] ?? '')
-        setUserEmail(data.user.email ?? '')
+
+    supabase.auth.getUser()
+      .then(({ data }) => {
+        if (data.user) {
+          setIsLoggedIn(true)
+          setUserName(data.user.user_metadata?.full_name ?? data.user.user_metadata?.nickname ?? data.user.email?.split('@')[0] ?? '')
+          setUserEmail(data.user.email ?? '')
+        }
+      })
+      .catch(() => {
+        // 네트워크 오류 또는 프로젝트 일시정지 — 비로그인 상태 유지
+      })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // 토큰 갱신 실패 (Supabase 프로젝트 일시정지 등) → 비로그인 처리
+      if (event === 'TOKEN_REFRESH_FAILED') {
+        setIsLoggedIn(false)
+        setUserName('')
+        setUserEmail('')
+        return
       }
-    })
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsLoggedIn(!!session)
       if (session?.user) {
         setUserName(session.user.user_metadata?.full_name ?? session.user.user_metadata?.nickname ?? session.user.email?.split('@')[0] ?? '')
@@ -178,8 +194,12 @@ export default function SidePanel({ open, onClose }: SidePanelProps) {
   }, [open])
 
   const handleSignOut = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
+    try {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+    } catch {
+      // 실패해도 UI는 정상적으로 닫음
+    }
     onClose()
     router.push('/')
     router.refresh()
@@ -317,9 +337,9 @@ export default function SidePanel({ open, onClose }: SidePanelProps) {
           </div>
           <div className="side-panel__listen-grid">
             {[
-              { id: 'am1250',      logo: '/radio1-light.svg',        alt: 'AM 1250',       bg: '#1a4bb5' },
-              { id: 'mix967',      logo: '/radio2-light.svg',        alt: 'MIX 96.7',      bg: '#1565d8' },
-              { id: 'country1077', logo: '/radio3-light.svg',        alt: 'Country 107.7', bg: '#1a1a1a' },
+              { id: 'am1250',      logo: '/logo-am1250-light.svg',        alt: 'AM 1250',       bg: '#1a4bb5' },
+              { id: 'mix967',      logo: '/logo-mix967-light.svg',        alt: 'MIX 96.7',      bg: '#1565d8' },
+              { id: 'country1077', logo: '/logo-country107-light.svg',        alt: 'Country 107.7', bg: '#1a1a1a' },
               { id: 'podcast',     logo: '/radio4-podcastville.svg', alt: 'Podcastville',  bg: '#3b1a5c' },
             ].map((ch) => (
               <a
@@ -342,8 +362,8 @@ export default function SidePanel({ open, onClose }: SidePanelProps) {
           </div>
           <div className="side-panel__listen-grid side-panel__listen-grid--col1">
             {[
-              { id: 'ljs',  logo: '/logo-ljs.svg',          alt: 'Local Job Search', bg: '#ffffff', href: '#' },
-              { id: 'gsj',  logo: '/logo-gsj.svg',          alt: 'Garage Sale',      bg: '#18bc9c', href: '#' },
+              { id: 'ljs',  logo: '/logo-local-job-shop.svg',          alt: 'Local Job Search', bg: '#ffffff', href: '#' },
+              { id: 'gsj',  logo: '/logo-garage-sale.svg',          alt: 'Garage Sale',      bg: '#18bc9c', href: '#' },
               { id: 'hgb',  logo: '/logo-hellogoodbuy.svg', alt: 'HelloGoodBuy',     bg: '#ffffff', href: 'https://hellogoodbuy.ca' },
             ].map((item) => (
               <a

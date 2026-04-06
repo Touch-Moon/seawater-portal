@@ -25,8 +25,15 @@ export async function proxy(request: NextRequest) {
     }
   )
 
-  // 세션 갱신 — getUser() 호출 필수
-  const { data: { user } } = await supabase.auth.getUser()
+  // 세션 갱신 — getUser() 호출 필수 (Supabase 공식 권고)
+  // 네트워크 오류(프로젝트 일시정지, env 미설정) 시 보호된 경로는 /login으로 리디렉트
+  let user = null
+  try {
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  } catch {
+    // 연결 실패 — 비인증으로 처리
+  }
 
   // /account/* 보호 — 미인증 시 /login으로 리디렉트
   if (!user && request.nextUrl.pathname.startsWith('/account')) {
