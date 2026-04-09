@@ -12,18 +12,11 @@
 
 > 🔗 **Live:** [seawater-portal.vercel.app](https://seawater-portal.vercel.app)
 
-## Screenshots
-
-<!-- Add screenshots after deployment -->
-| Desktop (Dark) | Desktop (Light) | Mobile |
-|:---:|:---:|:---:|
-| *Coming soon* | *Coming soon* | *Coming soon* |
-
 ## About
 
-I originally built the frontend for a network of 10 Canadian local news portals. This project is a complete redesign from scratch — reimagined with a modern Korean portal-style UI inspired by [Daum](https://www.daum.net) and [Naver](https://www.naver.com).
+I originally built the frontend for a network of 10 Canadian local news portals. This project is a complete redesign from scratch — modernizing the stack with Next.js 15, Supabase, and SCSS.
 
-The original sites share the same Rails monolith codebase, differentiated only by brand colors, logos, and content feeds. This redesign preserves that multi-site architecture while modernizing the stack with Next.js 15, Supabase, and SCSS.
+The original sites share the same Rails monolith codebase, differentiated only by brand colors, logos, and content feeds. This redesign preserves that multi-site architecture while delivering a cleaner, more performant experience.
 
 ## Live Sites (Original)
 
@@ -120,7 +113,7 @@ This project was audited and remediated for WCAG 2.1 AA compliance across three 
 
 > **Lighthouse Scores:** Performance **86** · Accessibility **97** · Best Practices **96** · SEO **100**
 
-### Pre-Deployment Optimizations (2026-04-05)
+### Pre-Deployment Optimizations
 
 | Area | Change |
 |------|--------|
@@ -223,15 +216,3 @@ Open [http://localhost:3000](http://localhost:3000) to view the app.
 | `NEXT_PUBLIC_SITE_URL` | ✅ | Canonical domain (e.g. `https://steinbachonline.com`) |
 | `WEATHER_API_KEY` | ✅ | [WeatherAPI](https://www.weatherapi.com) key (free tier) |
 
-## Vercel Deployment Checklist
-
-- [ ] Set all environment variables in Vercel project settings
-- [ ] Set `NEXT_PUBLIC_SITE_URL` to the canonical production domain
-- [ ] Verify `site_configs` Supabase table has a row for the site key
-- [ ] Confirm `WEATHER_API_KEY` is active (Free tier auto-activates after trial)
-- [ ] Run `npm run build` locally — must produce 0 errors
-- [ ] Set up Mac Mini Supabase keep-alive cron job (see CLAUDE.md Reminders)
-
-## License
-
-[MIT](LICENSE)
