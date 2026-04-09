@@ -186,26 +186,6 @@ Layout, components, features, auth, database schema, and deployment — **100% s
 | Deployment | Vercel |
 | Theme | next-themes (dark/light, default: dark) |
 
-## Getting Started
-
-```bash
-# 클론
-git clone https://github.com/Touch-Moon/seawater-portal.git
-cd seawater-portal
-
-# 의존성 설치
-npm install
-
-# 환경변수 설정
-cp .env.example .env.local
-# .env.example 파일 참고하여 키 값 입력
-
-# 개발 서버 실행
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) to view the app.
-
 ## Environment Variables
 
 | Variable | Required | Description |
